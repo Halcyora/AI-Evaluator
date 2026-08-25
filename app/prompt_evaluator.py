@@ -41,9 +41,7 @@ def extract_number(text: str) -> Optional[float]:
 
 
 def parse_weight_kg(case: Dict[str, Any]) -> Optional[float]:
-    weight_text = str(case.get("prompt_inputs", {}).get("weight", ""))
-    value = extract_number(weight_text)
-    return value
+    return extract_number(str(case.get("prompt_inputs", {}).get("weight", "")))
 
 
 def extract_meal_markers(output_text: str) -> Dict[str, bool]:
@@ -103,8 +101,6 @@ def estimate_meal_count(output_text: str) -> int:
 def detect_truncation(output_text: str) -> bool:
     text = output_text.strip().lower()
     if "[truncated]" in text:
-        return True
-    if text.endswith("[truncated]"):
         return True
     # Common signs of cut output
     if text.endswith(("|", "-", "(")):
@@ -248,62 +244,24 @@ def check_restriction_compliance(restrictions: str, output_text: str) -> List[Di
     processed_food = ["protein powder", "energy bar", "granola bar", "processed"]
     pork_alcohol = ["pork", "bacon", "ham", "wine", "beer", "alcohol", "rum", "vodka"]
 
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["vegetarian"],
-        output_text,
-        non_veg,
-        "Vegetarian restriction violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["no nuts", "nut", "allerg"],
-        output_text,
-        nuts,
-        "Nut-free restriction violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["sesame"],
-        output_text,
-        sesame_terms,
-        "Sesame restriction violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["no dairy", "lactose"],
-        output_text,
-        dairy,
-        "Dairy restriction violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["halal"],
-        output_text,
-        pork_alcohol,
-        "Halal restriction violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["no refined sugars"],
-        output_text,
-        refined_sugar,
-        "No-refined-sugar restriction potentially violated by",
-    )
-    add_keyword_restriction_issue(
-        issues,
-        r,
-        ["no processed foods"],
-        output_text,
-        processed_food,
-        "No-processed-foods restriction potentially violated by",
-    )
+    restriction_checks = [
+        (["vegetarian"], non_veg, "Vegetarian restriction violated by"),
+        (["no nuts", "nut", "allerg"], nuts, "Nut-free restriction violated by"),
+        (["sesame"], sesame_terms, "Sesame restriction violated by"),
+        (["no dairy", "lactose"], dairy, "Dairy restriction violated by"),
+        (["halal"], pork_alcohol, "Halal restriction violated by"),
+        (["no refined sugars"], refined_sugar, "No-refined-sugar restriction potentially violated by"),
+        (["no processed foods"], processed_food, "No-processed-foods restriction potentially violated by"),
+    ]
+    for trigger_terms, blocked_keywords, detail_prefix in restriction_checks:
+        add_keyword_restriction_issue(
+            issues,
+            r,
+            trigger_terms,
+            output_text,
+            blocked_keywords,
+            detail_prefix,
+        )
 
     if "organic" in r:
         organic_mentions = len(re.findall(r"\borganic\b", output_text.lower()))
@@ -451,14 +409,18 @@ def criteria_issues_for_single_rule(
     meal_count: int,
 ) -> List[Dict[str, str]]:
     issues: List[Dict[str, str]] = []
-    issues.extend(check_exact_meal_count(criterion, meal_count))
-    issues.extend(check_required_main_meals(criterion, meal_markers))
-    issues.extend(check_required_snacks(criterion, meal_markers))
-    issues.extend(check_meal_range(criterion, meal_count))
-    issues.extend(check_breakfast_lunch_dinner_snacks_structure(criterion, meal_count))
-    issues.extend(check_protein_per_kg(criterion, case, output_text))
-    issues.extend(check_protein_percent(criterion, output_text))
-    issues.extend(check_carbohydrate_percent(criterion, output_text))
+    checks = [
+        lambda: check_exact_meal_count(criterion, meal_count),
+        lambda: check_required_main_meals(criterion, meal_markers),
+        lambda: check_required_snacks(criterion, meal_markers),
+        lambda: check_meal_range(criterion, meal_count),
+        lambda: check_breakfast_lunch_dinner_snacks_structure(criterion, meal_count),
+        lambda: check_protein_per_kg(criterion, case, output_text),
+        lambda: check_protein_percent(criterion, output_text),
+        lambda: check_carbohydrate_percent(criterion, output_text),
+    ]
+    for check in checks:
+        issues.extend(check())
     return issues
 
 
@@ -645,9 +607,27 @@ def compute_total_penalty(issues: List[Dict[str, str]]) -> int:
 
 def combine_scores(llm_score: Optional[int], deterministic_issues: List[Dict[str, str]]) -> int:
     baseline = llm_score if llm_score is not None else 8
-    penalty = sum(severity_penalty(issue.get("severity", "minor")) for issue in deterministic_issues)
+    penalty = compute_total_penalty(deterministic_issues)
     final = baseline - penalty
     return max(0, min(10, final))
+
+
+def extract_source_metadata(source_entry: Optional[Dict[str, Any]]) -> Tuple[Optional[float], Optional[str]]:
+    if not source_entry:
+        return None, None
+
+    source_score: Optional[float] = None
+    source_reasoning: Optional[str] = None
+
+    raw_source_score = source_entry.get("score")
+    if isinstance(raw_source_score, (int, float)):
+        source_score = float(raw_source_score)
+
+    raw_source_reasoning = source_entry.get("reasoning")
+    if isinstance(raw_source_reasoning, str) and raw_source_reasoning.strip():
+        source_reasoning = raw_source_reasoning.strip()
+
+    return source_score, source_reasoning
 
 
 def short_reasoning(llm_reasoning: str, deterministic_issues: List[Dict[str, str]]) -> str:
@@ -946,6 +926,125 @@ def build_response_index(output_items: List[Dict[str, Any]]) -> Dict[str, Dict[s
     return index
 
 
+def resolve_output_items(responses: Any) -> List[Dict[str, Any]]:
+    if isinstance(responses, dict) and "results" in responses:
+        output_items = responses["results"]
+    elif isinstance(responses, list):
+        output_items = responses
+    else:
+        raise ValueError("Responses JSON must be a list, or an object containing 'results'.")
+
+    if not isinstance(output_items, list):
+        raise ValueError("Response entries must be a list.")
+
+    return output_items
+
+
+def resolve_source_entry(
+    output_index: Dict[str, Dict[str, Any]],
+    output_items: List[Dict[str, Any]],
+    case_key: str,
+    case_position: int,
+) -> Optional[Dict[str, Any]]:
+    source_entry = output_index.get(case_key)
+    if source_entry:
+        return source_entry
+
+    if case_position < len(output_items):
+        # Fallback by position if output file does not embed a full test case object.
+        return output_items[case_position]
+
+    return None
+
+
+def preflight_bedrock_or_raise(region_name: Optional[str], preflight_only: bool) -> bool:
+    ok, preflight_message = validate_aws_auth_for_bedrock(region_name=region_name)
+    print(preflight_message)
+    if not ok:
+        raise RuntimeError(
+            "AWS preflight failed. Fix credentials first, then rerun. "
+            "Tip: if using temporary credentials, set AWS_SESSION_TOKEN as well."
+        )
+    if preflight_only:
+        print("Preflight complete. Exiting without evaluation.")
+        return True
+    return False
+
+
+def evaluate_single_case(
+    case_index: int,
+    case: Dict[str, Any],
+    source_entry: Optional[Dict[str, Any]],
+    bedrock_client: Optional[Any],
+    model_id: str,
+    pass_threshold: float,
+    skip_llm: bool,
+) -> Dict[str, Any]:
+    response_text = select_output_text(source_entry or {}) if source_entry else ""
+    source_score, source_reasoning = extract_source_metadata(source_entry)
+    deterministic_issues = criteria_rule_checks(case, response_text)
+
+    if skip_llm:
+        llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = (
+            None,
+            "LLM evaluation skipped by CLI option.",
+            [],
+            [],
+            None,
+        )
+    else:
+        llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = bedrock_judge(
+            client=bedrock_client,
+            model_id=model_id,
+            case=case,
+            response_text=response_text,
+            deterministic_issues=deterministic_issues,
+        )
+
+    llm_critical_failure_notes = [f"LLM critical failure: {failure}" for failure in critical_failures]
+    deterministic_penalty = compute_total_penalty(deterministic_issues)
+    final_score = combine_scores(llm_score, deterministic_issues)
+    reasoning = short_reasoning(llm_reasoning, deterministic_issues)
+    passed = final_score >= pass_threshold
+
+    score_delta_vs_source = None
+    if source_score is not None:
+        score_delta_vs_source = round(float(final_score) - float(source_score), 2)
+
+    return {
+        "case_id": f"TC-{case_index:03d}",
+        "test_case": case,
+        "output": response_text,
+        "score": final_score,
+        "reasoning": reasoning,
+        "passed": passed,
+        "issues_detected": deterministic_issues,
+        "criteria_results": criteria_results,
+        "llm_critical_failures": llm_critical_failure_notes,
+        "llm_raw_score": llm_score,
+        "llm_error": llm_error,
+        "source_score": source_score,
+        "source_reasoning": source_reasoning,
+        "score_delta_vs_source": score_delta_vs_source,
+        "deterministic_penalty": deterministic_penalty,
+    }
+
+
+def build_summary(evaluated_results: List[Dict[str, Any]], pass_threshold: float) -> Dict[str, Any]:
+    scores = [int(item["score"]) for item in evaluated_results]
+    passed_count = sum(1 for item in evaluated_results if item["passed"])
+    total = len(evaluated_results)
+
+    return {
+        "total_cases": total,
+        "average_score": round(mean(scores), 2) if scores else 0.0,
+        "pass_threshold": pass_threshold,
+        "passed_cases": passed_count,
+        "failed_cases": total - passed_count,
+        "pass_rate_percent": round((passed_count / total) * 100.0, 2) if evaluated_results else 0.0,
+    }
+
+
 def evaluate_cases(
     dataset: List[Dict[str, Any]],
     output_items: List[Dict[str, Any]],
@@ -955,89 +1054,20 @@ def evaluate_cases(
     skip_llm: bool,
 ) -> Dict[str, Any]:
     output_index = build_response_index(output_items)
-    evaluated_results: List[Dict[str, Any]] = []
-
-    for i, case in enumerate(dataset, start=1):
-        case_key = normalize_case_key(case)
-        source_entry = output_index.get(case_key)
-
-        if not source_entry and i - 1 < len(output_items):
-            # Fallback by position if output file does not embed a full test case object.
-            source_entry = output_items[i - 1]
-
-        response_text = select_output_text(source_entry or {}) if source_entry else ""
-
-        source_score = None
-        source_reasoning = None
-        if source_entry:
-            raw_source_score = source_entry.get("score")
-            if isinstance(raw_source_score, (int, float)):
-                source_score = float(raw_source_score)
-            raw_source_reasoning = source_entry.get("reasoning")
-            if isinstance(raw_source_reasoning, str) and raw_source_reasoning.strip():
-                source_reasoning = raw_source_reasoning.strip()
-
-        deterministic_issues = criteria_rule_checks(case, response_text)
-
-        if skip_llm:
-            llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = (
-                None,
-                "LLM evaluation skipped by CLI option.",
-                [],
-                [],
-                None,
-            )
-        else:
-            llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = bedrock_judge(
-                client=bedrock_client,
-                model_id=model_id,
-                case=case,
-                response_text=response_text,
-                deterministic_issues=deterministic_issues,
-            )
-
-        llm_critical_failure_notes = [f"LLM critical failure: {failure}" for failure in critical_failures]
-
-        deterministic_penalty = compute_total_penalty(deterministic_issues)
-        final_score = combine_scores(llm_score, deterministic_issues)
-        reasoning = short_reasoning(llm_reasoning, deterministic_issues)
-        passed = final_score >= pass_threshold
-
-        score_delta_vs_source = None
-        if source_score is not None:
-            score_delta_vs_source = round(float(final_score) - float(source_score), 2)
-
-        evaluated_results.append(
-            {
-                "case_id": f"TC-{i:03d}",
-                "test_case": case,
-                "output": response_text,
-                "score": final_score,
-                "reasoning": reasoning,
-                "passed": passed,
-                "issues_detected": deterministic_issues,
-                "criteria_results": criteria_results,
-                "llm_critical_failures": llm_critical_failure_notes,
-                "llm_raw_score": llm_score,
-                "llm_error": llm_error,
-                "source_score": source_score,
-                "source_reasoning": source_reasoning,
-                "score_delta_vs_source": score_delta_vs_source,
-                "deterministic_penalty": deterministic_penalty,
-            }
+    evaluated_results = [
+        evaluate_single_case(
+            case_index=i,
+            case=case,
+            source_entry=resolve_source_entry(output_index, output_items, normalize_case_key(case), i - 1),
+            bedrock_client=bedrock_client,
+            model_id=model_id,
+            pass_threshold=pass_threshold,
+            skip_llm=skip_llm,
         )
+        for i, case in enumerate(dataset, start=1)
+    ]
 
-    scores = [int(item["score"]) for item in evaluated_results]
-    passed_count = sum(1 for item in evaluated_results if item["passed"])
-
-    summary = {
-        "total_cases": len(evaluated_results),
-        "average_score": round(mean(scores), 2) if scores else 0.0,
-        "pass_threshold": pass_threshold,
-        "passed_cases": passed_count,
-        "failed_cases": len(evaluated_results) - passed_count,
-        "pass_rate_percent": round((passed_count / len(evaluated_results)) * 100.0, 2) if evaluated_results else 0.0,
-    }
+    summary = build_summary(evaluated_results, pass_threshold)
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -1088,28 +1118,12 @@ def main() -> None:
         raise ValueError("Dataset JSON must be a list of test cases.")
 
     responses = load_json(responses_path)
-    if isinstance(responses, dict) and "results" in responses:
-        output_items = responses["results"]
-    elif isinstance(responses, list):
-        output_items = responses
-    else:
-        raise ValueError("Responses JSON must be a list, or an object containing 'results'.")
-
-    if not isinstance(output_items, list):
-        raise ValueError("Response entries must be a list.")
+    output_items = resolve_output_items(responses)
 
     region_name = args.aws_region or os.getenv("AWS_DEFAULT_REGION")
 
     if not args.skip_llm:
-        ok, preflight_message = validate_aws_auth_for_bedrock(region_name=region_name)
-        print(preflight_message)
-        if not ok:
-            raise RuntimeError(
-                "AWS preflight failed. Fix credentials first, then rerun. "
-                "Tip: if using temporary credentials, set AWS_SESSION_TOKEN as well."
-            )
-        if args.preflight_only:
-            print("Preflight complete. Exiting without evaluation.")
+        if preflight_bedrock_or_raise(region_name=region_name, preflight_only=args.preflight_only):
             return
 
     bedrock_client: Optional[Any] = None
