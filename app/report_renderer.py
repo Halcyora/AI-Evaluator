@@ -107,7 +107,8 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
     .stat .k {{ color: var(--muted); font-size: 13px; }}
     .stat .v {{ font-size: 24px; font-weight: 700; margin-top: 6px; }}
     .table-wrap {{
-      overflow-x: auto;
+      overflow: auto;
+      max-height: calc(100vh - 220px);
       border: 1px solid var(--line);
       border-radius: 12px;
       background: #fff;
