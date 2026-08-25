@@ -1,0 +1,795 @@
+[
+  {
+    "prompt_inputs": {
+      "height": "180",
+      "weight": "85",
+      "goal": "muscle recovery and protein intake optimization for weightlifting",
+      "restrictions": "none"
+    },
+    "solution_criteria": [
+      "Meal plan covers exactly one full day with breakfast, lunch, dinner, and snacks",
+      "Total daily protein intake meets or exceeds 1.6g per kg of body weight (136g minimum)",
+      "All meals and quantities are realistic and achievable for a single athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a weightlifter focused on muscle recovery and protein intake"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "82 kg",
+      "goal": "Maintain current fitness during off-season",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals for 1 day",
+      "Meals are vegetarian and nut-free",
+      "Caloric intake supports maintenance for 82 kg athlete",
+      "Plan is presented in compact, concise format"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete during off-season with maintenance focus"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180",
+      "weight": "75",
+      "goal": "Muscle gain with intermittent fasting (16:8 protocol)",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan fits within 8-hour eating window with appropriate caloric density",
+      "All meals align with vegetarian and dairy-free requirements",
+      "Provides adequate protein for muscle gain goals"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring intermittent fasting compatibility"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "85 kg",
+      "goal": "Build muscle and maximize strength for powerlifting competition",
+      "restrictions": "None"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals for 1 day with specific foods and portions",
+      "Protein comprises at least 30% of total daily calories",
+      "Total daily calories support muscle-building goals for an 85 kg athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a power athlete needing high protein percentage"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "High-carb loading for 100m sprint competition tomorrow",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers 3 meals and snacks for one full day",
+      "Emphasizes high carbohydrate intake (60-65% of calories) appropriate for carb-loading",
+      "All foods comply with vegetarian and nut-free restrictions",
+      "Includes practical timing and portion guidance suitable for a sprinter"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a sprinter requiring high-carb loading before competition"
+  },
+  {
+    "prompt_inputs": {
+      "height": "188 cm",
+      "weight": "85 kg",
+      "goal": "maximize energy and muscle recovery for basketball training and competition",
+      "restrictions": "lactose intolerant"
+    },
+    "solution_criteria": [
+      "Meal plan covers breakfast, lunch, dinner, and snacks across one full day",
+      "All meals and snacks are suitable for a lactose-intolerant athlete",
+      "Plan includes high-protein and carbohydrate-rich foods to support quick energy and muscle recovery",
+      "Meal plan is presented in compact, easy-to-read format"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a basketball player needing quick energy and recovery"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Build muscle and improve endurance for competitive cycling",
+      "restrictions": "No processed foods, no refined sugars, no artificial additives"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day",
+      "All foods listed are whole, unprocessed ingredients",
+      "Macronutrient balance supports muscle building and endurance goals",
+      "Plan is concise and practical to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete avoiding processed foods"
+  },
+  {
+    "prompt_inputs": {
+      "height": "185 cm",
+      "weight": "82 kg",
+      "goal": "Maximize explosive power and vertical jump performance",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus snacks for one full day",
+      "Emphasizes protein-rich foods and carbohydrates to support explosive power development",
+      "All foods comply with vegetarian and nut-free restrictions",
+      "Realistic portion sizes appropriate for an 82 kg athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a volleyball player focused on explosive power nutrition"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "82 kg",
+      "goal": "Post-workout recovery and muscle building",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan covers 1 full day with breakfast, lunch, dinner, and at least one post-workout snack",
+      "Includes high-protein options suitable for post-workout recovery that align with vegetarian, dairy-free restrictions",
+      "Format is compact and concise (under 400 tokens)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing post-workout recovery meal focus"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "75 kg",
+      "goal": "muscle gain with high protein intake",
+      "restrictions": "halal diet, no pork or alcohol-based ingredients"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day",
+      "All foods comply with halal dietary restrictions",
+      "Includes adequate protein to support muscle gain goal",
+      "Concise format suitable for quick reference"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring cultural or religious dietary restrictions"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "sustained energy for a 120km cycling event with moderate intensity efforts",
+      "restrictions": "vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers breakfast, lunch, dinner, and snacks across one day",
+      "Meals emphasize carbohydrates and adequate protein for cycling endurance",
+      "All foods comply with vegetarian and nut-free restrictions",
+      "Plan is practical and concise (suitable for quick reference before/during event)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a cyclist needing sustained energy throughout the day"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Endurance training with high carbohydrate intake for sustained energy",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all meals for one full day",
+      "Carbohydrates comprise 60-70% of total daily calories",
+      "All meals respect vegetarian and nut-free restrictions",
+      "Plan is concise and practical to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an endurance athlete needing high carbohydrate percentage"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Build muscle and improve athletic performance",
+      "restrictions": "Vegetarian diet, no meat or fish"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals and includes vegetarian protein sources (legumes, tofu, eggs, dairy, nuts)",
+      "Plan is compact and fits on a single day with realistic portion sizes",
+      "Meals support muscle-building goal with adequate calories and macronutrient balance"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete following a vegetarian diet"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Build muscle and improve athletic performance",
+      "restrictions": "Low-sodium diet (maximum 1500mg sodium per day)"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day with specific foods and portions",
+      "Total daily sodium does not exceed 1500mg",
+      "Meals support muscle-building goal with adequate protein (approximately 1.6-2.2g per kg body weight)",
+      "Plan is concise and practical for a single athlete to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete on a low-sodium diet"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "muscle building and endurance training",
+      "restrictions": "nut allergies (including peanuts, tree nuts, and sesame)"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus snacks for one full day",
+      "All meals and snacks are completely nut-free with no cross-contamination risks",
+      "Provides adequate protein and carbohydrates to support muscle building and endurance goals",
+      "Plan is compact and concise (brief descriptions, not elaborate recipes)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with nut allergies"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "muscle gain and endurance training",
+      "restrictions": "organic foods only, no synthetic additives or pesticides"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals and is structured for one full day",
+      "All foods listed are organic or certified organic",
+      "Macronutrient distribution supports muscle gain and endurance (adequate protein, carbs, and healthy fats)",
+      "Plan is concise and practical to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring organic food options"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Build muscle and improve athletic performance",
+      "restrictions": "None"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus snacks for one full day",
+      "Total daily calories are appropriate for a teenage athlete (approximately 2800-3200 calories)",
+      "Includes adequate protein distribution across meals to support muscle building",
+      "Meals are practical and realistic for a teenager to prepare or consume"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a teenage athlete with higher caloric needs"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Build muscle and improve endurance for competitive soccer",
+      "restrictions": "Vegetarian, no dairy, gluten-free, preference for Mediterranean cuisine"
+    },
+    "solution_criteria": [
+      "Meal plan includes 3 meals that are vegetarian, dairy-free, and gluten-free",
+      "Meals feature Mediterranean cuisine ingredients and cooking styles",
+      "Plan supports muscle-building and endurance goals with adequate protein and carbohydrates",
+      "Presented in compact, easy-to-follow 1-day format"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring meals from specific cuisine preferences"
+  },
+  {
+    "prompt_inputs": {
+      "height": "182 cm",
+      "weight": "78 kg",
+      "goal": "maximize cardiovascular endurance and sustain energy for 90-minute soccer match",
+      "restrictions": "vegetarian"
+    },
+    "solution_criteria": [
+      "Meal plan spans exactly 1 day with 3-4 meals/snacks",
+      "Emphasizes carbohydrates and adequate protein for endurance and muscle recovery",
+      "All foods are vegetarian-compliant",
+      "Plan is concise and practical to prepare for an athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a soccer player needing cardiovascular endurance fuel"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "75 kg",
+      "goal": "Maintain stable blood sugar levels while training for endurance sports",
+      "restrictions": "No refined sugars, no processed foods"
+    },
+    "solution_criteria": [
+      "Meal plan includes 4 meals/snacks distributed throughout the day to prevent blood sugar spikes",
+      "Each meal combines complex carbohydrates, protein, and healthy fats in appropriate proportions",
+      "All foods listed are whole, unprocessed options without refined sugars",
+      "Plan is compact and fits on a single page with clear meal times and portion guidance"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete managing blood sugar stability"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "82 kg",
+      "goal": "Recovery from ACL injury with anti-inflammatory nutrition focus",
+      "restrictions": "Gluten-free, no shellfish"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals plus snacks for one full day",
+      "Includes anti-inflammatory foods (omega-3 sources, colorful vegetables, turmeric, ginger)",
+      "Respects all dietary restrictions (gluten-free, no shellfish)",
+      "Provides adequate protein for muscle recovery (approximately 1.6-2.2g per kg body weight)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete recovering from injury with anti-inflammatory focus"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Endurance performance with optimal hydration strategy",
+      "restrictions": "Lactose intolerant"
+    },
+    "solution_criteria": [
+      "Includes specific hydration timing recommendations throughout the day",
+      "Provides a compact 1-day meal plan with breakfast, lunch, dinner, and snacks",
+      "All meals and drinks accommodate lactose intolerance",
+      "Meals support endurance athletic performance"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring hydration timing details"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "High-intensity endurance training with optimal hydration for hot climate",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all meals for one full day with emphasis on hydration strategies",
+      "Meals are appropriate for a 75 kg endurance athlete with adequate carbohydrates and protein",
+      "Plan accommodates vegetarian diet and avoids nuts",
+      "Includes specific hydration recommendations suited for hot climate conditions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete in a hot climate requiring extra hydration"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Endurance training with stable energy levels",
+      "restrictions": "Low-fiber, easily digestible foods only; avoid dairy and high-fat items before workouts"
+    },
+    "solution_criteria": [
+      "Meal plan spans exactly 1 day with 3-4 meals/snacks",
+      "All meals respect digestive restrictions (low-fiber, easily digestible, no dairy or high-fat pre-workout)",
+      "Pre-workout meals are light and quickly absorbed",
+      "Caloric intake and macronutrient distribution support endurance training goals"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with digestive sensitivities before workouts"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Build muscle and strength with evening training at 6:30 PM",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus pre-evening training fuel (consumed 1-2 hours before 6:30 PM training)",
+      "Caloric and macronutrient distribution supports muscle building goals",
+      "All meals respect vegetarian and nut-free restrictions",
+      "Plan is compact and concise (brief descriptions, no excessive detail)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with evening training requiring pre-evening fuel"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Build muscle and increase strength",
+      "restrictions": "No nuts or nut butters, vegetarian"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals for 1 day with affordable, budget-friendly ingredients",
+      "Includes adequate protein sources suitable for vegetarians (eggs, legumes, dairy)",
+      "All foods are nut-free and align with stated dietary restrictions",
+      "Plan is concise and presented in a compact, easy-to-read format"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete on a budget with affordable options"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "82 kg",
+      "goal": "Maintain lean muscle mass while improving endurance performance",
+      "restrictions": "Ketogenic diet (under 50g carbs per day), no dairy, no processed foods"
+    },
+    "solution_criteria": [
+      "Meal plan contains exactly 3 meals appropriate for one day",
+      "All meals comply with ketogenic diet macros and stated restrictions",
+      "Plan is presented in compact, easy-to-read format"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete on a ketogenic diet"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Build muscle and increase strength",
+      "restrictions": "Dairy allergy (no milk, cheese, yogurt, butter)"
+    },
+    "solution_criteria": [
+      "Meal plan covers all meals for one full day and is compact",
+      "All meals are dairy-free and safe for dairy allergy",
+      "Meals support muscle-building goal with adequate protein",
+      "Plan is practical and concise without unnecessary detail"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with dairy allergies"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180",
+      "weight": "75",
+      "goal": "Endurance performance optimization at 2,500m altitude",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan spans exactly one full day with breakfast, lunch, dinner, and snacks",
+      "Accounts for altitude training needs (increased iron, carbohydrates, and hydration)",
+      "All meals comply with vegetarian and dairy-free restrictions",
+      "Portion sizes and caloric distribution appropriate for 75kg endurance athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete in altitude training requiring specific adjustments"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Maximize agility and court speed for competitive tennis",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals and includes snacks appropriate for tennis performance",
+      "Meals emphasize carbohydrates and lean protein to support agility and recovery",
+      "All foods comply with vegetarian and nut-free restrictions",
+      "Plan is concise and fits within one day (breakfast, lunch, dinner, pre/post-match options)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a tennis player requiring agility-focused nutrition"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "75 kg",
+      "goal": "Build muscle and increase strength",
+      "restrictions": "Lactose intolerant"
+    },
+    "solution_criteria": [
+      "Meal plan covers 3 meals within 1 day",
+      "Includes calcium-rich alternatives suitable for lactose intolerance (fortified plant-based options, leafy greens, or calcium supplements)",
+      "Provides adequate protein to support muscle-building goal for a 75 kg athlete",
+      "Plan is concise and practical to prepare"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring calcium-rich options"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Build muscle and improve endurance for competitive soccer",
+      "restrictions": "Gluten intolerance"
+    },
+    "solution_criteria": [
+      "All meals are gluten-free",
+      "Meal plan spans one full day with breakfast, lunch, dinner, and snacks",
+      "Nutritionally balanced with adequate protein for muscle building and carbohydrates for endurance",
+      "Practical and concise format suitable for quick reference"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with gluten intolerance"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "85 kg",
+      "goal": "Lean muscle gain - reduce body fat to 12% while maintaining strength",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan spans exactly 1 day with 3-4 meals",
+      "Caloric intake supports lean muscle gain goal with appropriate protein distribution",
+      "All meals comply with vegetarian and dairy-free restrictions",
+      "Plan is concise and practical for single athlete implementation"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete targeting specific body composition changes"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "endurance training with high energy demands",
+      "restrictions": "vegetarian, nut allergy"
+    },
+    "solution_criteria": [
+      "All meals are portable and require minimal preparation or refrigeration",
+      "Meal plan includes breakfast, lunch, dinner, and snacks totaling appropriate calories for endurance athlete",
+      "All foods comply with vegetarian diet and contain no nuts or tree nuts",
+      "Each meal or snack is described in 1-2 lines for compactness"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing portable/travel-friendly meal options"
+  },
+  {
+    "prompt_inputs": {
+      "height": "185 cm",
+      "weight": "82 kg",
+      "goal": "maximize energy and muscle recovery during pre-season intense training",
+      "restrictions": "vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus snacks for one full day",
+      "Includes adequate protein and carbohydrates to support intense training and recovery",
+      "All foods comply with vegetarian diet and no nuts restriction",
+      "Plan is compact and concise (under 400 tokens)"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete during pre-season intense training phase"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Optimize vitamin D intake while maintaining athletic performance",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan covers exactly 1 day with 3+ meals",
+      "Includes vitamin D-rich foods (fortified plant milks, mushrooms, fatty fish alternatives, or supplements mentioned)",
+      "Macronutrients support athletic performance (adequate protein and carbohydrates)",
+      "All meals respect vegetarian and dairy-free restrictions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing vitamin D optimization"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178",
+      "weight": "72",
+      "goal": "Build muscle and increase strength",
+      "restrictions": "Vegan diet"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day",
+      "All foods are vegan-compliant with no animal products",
+      "Plan includes adequate protein sources suitable for muscle building",
+      "Format is compact and concise, easy to follow"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete following a vegan diet"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "High-intensity endurance training with optimal electrolyte balance",
+      "restrictions": "Lactose intolerant, no added sugar"
+    },
+    "solution_criteria": [
+      "Meal plan covers 3 meals and snacks across one full day",
+      "Includes sodium, potassium, and magnesium-rich foods to support electrolyte balance",
+      "Respects lactose intolerance and no added sugar restrictions",
+      "Provides adequate calories and macronutrients for endurance athlete training demands"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete managing electrolyte balance"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Optimize endurance and muscle recovery for competitive swimming training",
+      "restrictions": "Vegetarian, no shellfish"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals and includes appropriate macronutrient distribution (carbohydrates for energy, protein for recovery, healthy fats)",
+      "All meals respect vegetarian and shellfish-free restrictions",
+      "Plan is formatted compactly as a single day with clear meal times and portions",
+      "Meals support aquatic performance with adequate hydration and timing considerations"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a swimmer requiring balanced macronutrients for aquatic performance"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Build muscle and increase strength for competitive weightlifting",
+      "restrictions": "Lactose intolerant, vegan"
+    },
+    "solution_criteria": [
+      "Meal plan covers all 3 meals plus snacks for 1 day",
+      "Includes specific supplement recommendations (protein powder, creatine, etc.) with timing",
+      "Meets high protein requirements (~1.8g per kg body weight) suitable for muscle building",
+      "All foods comply with vegan and lactose-free restrictions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing supplement inclusion in meal plan"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "82 kg",
+      "goal": "Maintain muscle mass while supporting joint recovery",
+      "restrictions": "Low sodium, avoid high-impact foods, gluten-free"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus snacks for one full day",
+      "Includes anti-inflammatory foods and adequate protein for muscle maintenance",
+      "Respects all dietary restrictions (low sodium, gluten-free) and joint-health considerations",
+      "Calorie and macronutrient targets are appropriate for a 82kg athlete focused on recovery"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an older athlete with joint-health considerations"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Peak performance on competition day with sustained energy and optimal hydration",
+      "restrictions": "Lactose intolerant, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers full competition day with specific timing for pre-competition, during competition, and post-competition meals",
+      "All meals and snacks accommodate lactose intolerance and nut allergies",
+      "Includes appropriate caloric intake and macronutrient balance for a 75kg athlete's performance needs"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete during competition day with timing emphasis"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Endurance performance with pre-workout meal timing optimization",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan covers full day with clear pre-workout meal timing (2-3 hours before exercise)",
+      "All meals align with vegetarian, dairy-free restrictions",
+      "Plan is compact and concise (fits within 1 page format)",
+      "Includes appropriate macronutrient balance for endurance athlete"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing pre-workout meal timing specifics"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Endurance training with morning competition preparation",
+      "restrictions": "Caffeine-sensitive stomach; requires strategic caffeine timing"
+    },
+    "solution_criteria": [
+      "Meal plan is compact and covers one full day with breakfast, lunch, dinner, and snacks",
+      "Caffeine is strategically timed (e.g., post-breakfast or mid-morning) to support performance without digestive upset",
+      "Nutrition supports endurance athlete needs (adequate carbohydrates, protein, and hydration)",
+      "All dietary restrictions are respected throughout the day"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring caffeine strategy incorporation"
+  },
+  {
+    "prompt_inputs": {
+      "height": "160 cm",
+      "weight": "52 kg",
+      "goal": "Lean muscle maintenance with moderate calorie intake for performance",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day",
+      "Caloric intake is appropriate for lean muscle maintenance (approximately 1,800-2,000 calories)",
+      "Protein distributed across meals to support muscle maintenance (minimum 1.2g per kg body weight)",
+      "All meals respect the vegetarian and nut-free restrictions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a gymnast requiring lean muscle maintenance with moderate calories"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "75 kg",
+      "goal": "Maximize performance for a 2-hour afternoon training session",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan covers full day with 4+ eating occasions strategically timed around the afternoon training session",
+      "Pre-training meal provided 2-3 hours before session; post-training meal within 30-60 minutes after",
+      "Macronutrient balance supports athletic performance and recovery (adequate protein and carbohydrates)",
+      "All meals comply with vegetarian and dairy-free restrictions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete requiring specific meal timing around training sessions"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "82 kg",
+      "goal": "Build muscle while maintaining energy for training",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan contains exactly 4 meals (breakfast, lunch, snack, dinner) requiring minimal prep time",
+      "All meals are vegetarian and nut-free",
+      "Caloric intake and macronutrient distribution support muscle-building goals",
+      "Each meal includes specific quantities and simple preparation instructions"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete needing meal prep efficiency for busy schedule"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "78 kg",
+      "goal": "Build muscle and improve endurance for early morning track training",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Includes a substantial pre-dawn breakfast (consumed 1-2 hours before training) with carbohydrates and protein",
+      "Provides balanced meals across all three meals plus snacks totaling appropriate caloric intake for the athlete's profile",
+      "Adheres to vegetarian and dairy-free requirements throughout the entire day",
+      "Meal plan is presented in compact, easy-to-read format suitable for quick reference"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with early morning training requiring breakfast strategy"
+  },
+  {
+    "prompt_inputs": {
+      "height": "178 cm",
+      "weight": "72 kg",
+      "goal": "Build muscle and improve endurance while addressing iron deficiency",
+      "restrictions": "Vegetarian, no nuts"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals for one day and is concise",
+      "Includes iron-rich foods suitable for vegetarian diet (legumes, leafy greens, fortified grains)",
+      "Meals support muscle building and endurance goals with adequate protein",
+      "Respects vegetarian and nut-free restrictions throughout all meals"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with an athlete with iron deficiency considerations"
+  },
+  {
+    "prompt_inputs": {
+      "height": "180 cm",
+      "weight": "72 kg",
+      "goal": "Marathon endurance training with optimal carbohydrate loading and sustained energy",
+      "restrictions": "Vegetarian, no dairy"
+    },
+    "solution_criteria": [
+      "Meal plan covers all three meals plus pre/during/post-run fueling strategy",
+      "Emphasizes carbohydrates and plant-based proteins appropriate for marathon endurance",
+      "Respects vegetarian and dairy-free dietary restrictions",
+      "Provides practical, compact format suitable for single-day reference"
+    ],
+    "task_description": "Write a compact, concise 1 day meal plan for a single athlete",
+    "scenario": "Testing with a marathon runner needing endurance fuel strategy"
+  }
+]
