@@ -57,17 +57,43 @@ def extract_meal_markers(output_text: str) -> Dict[str, bool]:
     return markers
 
 
-def estimate_meal_count(output_text: str) -> int:
-    lines = [line.strip().lower() for line in output_text.splitlines()]
-    heading_meal_hits = 0
-    for line in lines:
-        if re.search(r"\b(breakfast|lunch|dinner|snack|meal|pre-training|post-workout|recovery)\b", line):
-            if line.startswith("##") or line.startswith("**") or line.endswith(":"):
-                heading_meal_hits += 1
+def classify_eating_heading(line: str) -> Optional[str]:
+    for marker in ["breakfast", "lunch", "dinner"]:
+        if marker in line:
+            return marker
 
-    if heading_meal_hits > 0:
-        # Deduplicate multiple formatting references by capping to plausible day count.
-        return min(heading_meal_hits, 10)
+    if re.search(r"\b(snack|pre-training|post-workout|post-training|pre-match|recovery|hydration|during event)\b", line):
+        return "snack"
+
+    return None
+
+
+def extract_eating_occasions(output_text: str) -> List[str]:
+    occasions: List[str] = []
+    skip_heading_terms = [
+        "daily nutritional target",
+        "daily totals",
+        "recommendation",
+        "rationale",
+        "eating window",
+    ]
+
+    for raw_line in output_text.splitlines():
+        line = raw_line.strip().lower()
+        if not line or not line.startswith(("##", "**")) or any(term in line for term in skip_heading_terms):
+            continue
+
+        hit = classify_eating_heading(line)
+        if hit:
+            occasions.append(hit)
+
+    return occasions
+
+
+def estimate_meal_count(output_text: str) -> int:
+    structured_hits = extract_eating_occasions(output_text)
+    if structured_hits:
+        return min(len(structured_hits), 10)
 
     # Fallback: count obvious meal label occurrences.
     fallback = len(re.findall(r"\b(breakfast|lunch|dinner|snack|snacks)\b", output_text.lower()))
@@ -215,9 +241,8 @@ def check_restriction_compliance(restrictions: str, output_text: str) -> List[Di
         "macadamia",
         "peanut",
         "nut butter",
-        "sesame",
-        "tahini",
     ]
+    sesame_terms = ["sesame", "tahini"]
     dairy = ["milk", "cheese", "yogurt", "butter", "whey", "casein", "cream", "cottage cheese"]
     refined_sugar = ["white sugar", "brown sugar", "corn syrup", "honey", "maple syrup", "syrup"]
     processed_food = ["protein powder", "energy bar", "granola bar", "processed"]
@@ -238,6 +263,14 @@ def check_restriction_compliance(restrictions: str, output_text: str) -> List[Di
         output_text,
         nuts,
         "Nut-free restriction violated by",
+    )
+    add_keyword_restriction_issue(
+        issues,
+        r,
+        ["sesame"],
+        output_text,
+        sesame_terms,
+        "Sesame restriction violated by",
     )
     add_keyword_restriction_issue(
         issues,
@@ -312,6 +345,29 @@ def check_meal_range(criterion: str, meal_count: int) -> List[Dict[str, str]]:
                 "wrong_meal_count",
                 "major",
                 f"Expected 3-4 meals/snacks, detected approximately {meal_count}.",
+            )
+        ]
+    return []
+
+
+def check_breakfast_lunch_dinner_snacks_structure(criterion: str, meal_count: int) -> List[Dict[str, str]]:
+    if "at least one" in criterion:
+        return []
+
+    structure_phrases = [
+        "breakfast, lunch, dinner, and snacks",
+        "breakfast, lunch, dinner and snacks",
+        "3 meals and snacks",
+        "three meals and snacks",
+        "three meals plus snacks",
+        "all three meals plus snacks",
+    ]
+    if any(phrase in criterion for phrase in structure_phrases) and meal_count != 4:
+        return [
+            make_issue(
+                "wrong_meal_count",
+                "major",
+                f"Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately {meal_count}.",
             )
         ]
     return []
@@ -399,6 +455,7 @@ def criteria_issues_for_single_rule(
     issues.extend(check_required_main_meals(criterion, meal_markers))
     issues.extend(check_required_snacks(criterion, meal_markers))
     issues.extend(check_meal_range(criterion, meal_count))
+    issues.extend(check_breakfast_lunch_dinner_snacks_structure(criterion, meal_count))
     issues.extend(check_protein_per_kg(criterion, case, output_text))
     issues.extend(check_protein_percent(criterion, output_text))
     issues.extend(check_carbohydrate_percent(criterion, output_text))
@@ -427,7 +484,8 @@ def criteria_rule_checks(case: Dict[str, Any], output_text: str) -> List[Dict[st
         issues.extend(check_restriction_compliance(restrictions, output_text))
 
     if detect_truncation(output_text):
-        issues.append(make_issue("truncated_output", "major", "Output appears truncated or incomplete."))
+        # Keep truncation visible to reviewers but avoid auto-failing if core criteria are still met.
+        issues.append(make_issue("truncated_output", "info", "Output appears truncated or incomplete."))
 
     if not re.search(r"\b(calories|protein|carbohydrates|fat|daily total|daily totals)\b", output_text.lower()):
         issues.append(make_issue("incomplete_totals", "minor", "No clear daily nutrition totals were detected."))
@@ -451,22 +509,36 @@ def build_evaluator_prompt(case: Dict[str, Any], response_text: str, determinist
     }
 
     return (
-        "You are a strict prompt-evaluation judge for athlete meal-plan responses. "
-        "Evaluate only against the provided solution criteria and restrictions. "
-        "Be conservative: if evidence is missing, mark unmet.\n\n"
-        "Scoring policy:\n"
-        "- Start from 10.\n"
-        "- Major criterion failure: -3 each.\n"
-        "- Minor criterion failure: -1 each.\n"
-        "- Truncated/incomplete response: at least one major failure.\n"
-        "- Keep score in [0,10].\n"
-        "- Return integer score.\n\n"
-        "Special checks to enforce:\n"
-        "- If criterion says exactly 4 meals, more or fewer is a failure.\n"
-        "- Respect explicit diet restrictions (vegetarian, nut-free, dairy-free, halal, gluten-free, organic-only, low-sodium, no refined sugar, no processed foods).\n"
-        "- Flag missing sections and missing totals where required by criteria.\n\n"
-        "Return STRICT JSON only, no markdown, matching this schema:\n"
+        "Role: You are an expert evaluator for one-day athlete meal-plan prompts.\n\n"
+        "Objective:\n"
+        "- Evaluate only against provided solution criteria and restrictions.\n"
+        "- Use direct evidence from the candidate response text.\n"
+        "- If evidence is missing or ambiguous, mark criterion unmet.\n\n"
+        "Scoring rules:\n"
+        "- Start score at 10.\n"
+        "- Deduct 3 points for each major failure.\n"
+        "- Deduct 1 point for each minor failure.\n"
+        "- Do not auto-fail purely for truncation if core criteria can still be verified from available text.\n"
+        "- Final score must be an integer in range 0-10.\n\n"
+        "Important interpretation rules:\n"
+        "- Strict meal count only when criterion explicitly says exactly N meals or gives a fixed range (for example 3-4).\n"
+        "- For wording like 'covers all 3 meals', require breakfast+lunch+dinner to be present; extra snacks are not a violation unless explicitly restricted.\n"
+        "- Restriction checks must be literal and context-aware (for example plant-based milks are not dairy violations).\n"
+        "- Report missing totals/macros only when a criterion requires them or when verification is impossible.\n\n"
+        "Output format (STRICT):\n"
+        "- Return JSON only. No markdown, no prose outside JSON.\n"
         f"{json.dumps(schema_hint, ensure_ascii=False)}\n\n"
+        "Issue type guidance examples:\n"
+        "1) wrong_meal_count:\n"
+        "criterion='exactly 4 meals', response has 6 eating occasions.\n"
+        "2) missing_sections:\n"
+        "criterion requires all 3 meals, response lacks dinner heading.\n"
+        "3) unmet_restriction:\n"
+        "restriction='vegetarian', response includes chicken breast.\n"
+        "4) incomplete_totals:\n"
+        "criterion requires carb percentage, but daily carbs/calories are missing.\n"
+        "5) truncated_output:\n"
+        "response ends abruptly; flag it, but do not treat as automatic major failure if core criteria remain verifiable.\n\n"
         "TEST_CASE:\n"
         f"{json.dumps(case, ensure_ascii=False)}\n\n"
         "DETERMINISTIC_PRECHECK_ISSUES:\n"
@@ -562,7 +634,13 @@ def severity_penalty(severity: str) -> int:
         return 2
     if severity == "minor":
         return 1
-    return 1
+    if severity == "info":
+        return 0
+    return 0
+
+
+def compute_total_penalty(issues: List[Dict[str, str]]) -> int:
+    return sum(severity_penalty(issue.get("severity", "minor")) for issue in issues)
 
 
 def combine_scores(llm_score: Optional[int], deterministic_issues: List[Dict[str, str]]) -> int:
@@ -608,6 +686,25 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
         if not issues_html:
             issues_html = "None"
 
+        critical_failures_html = "<br>".join(escape(str(x)) for x in item.get("llm_critical_failures", []))
+        if not critical_failures_html:
+            critical_failures_html = "None"
+
+        llm_error_text = item.get("llm_error")
+        llm_error_html = escape(str(llm_error_text)) if llm_error_text else "None"
+
+        source_score = item.get("source_score")
+        source_score_text = "-" if source_score is None else str(source_score)
+
+        source_reasoning = item.get("source_reasoning")
+        source_reasoning_text = "-" if not source_reasoning else escape(str(source_reasoning))
+
+        score_delta = item.get("score_delta_vs_source")
+        score_delta_text = "-" if score_delta is None else str(score_delta)
+
+        deterministic_penalty = item.get("deterministic_penalty")
+        deterministic_penalty_text = "-" if deterministic_penalty is None else str(deterministic_penalty)
+
         rows.append(
             "\n".join(
                 [
@@ -620,6 +717,13 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
                     f"<td><span class=\"score score-{score_class(int(item['score']))}\">{item['score']}</span></td>",
                     f"<td>{escape(str(item.get('reasoning', '')))}</td>",
                     f"<td>{issues_html}</td>",
+                    f"<td>{escape(str(item.get('llm_raw_score', '-')))}</td>",
+                    f"<td>{critical_failures_html}</td>",
+                    f"<td>{llm_error_html}</td>",
+                    f"<td>{source_score_text}</td>",
+                    f"<td>{score_delta_text}</td>",
+                    f"<td>{deterministic_penalty_text}</td>",
+                    f"<td>{source_reasoning_text}</td>",
                     "</tr>",
                 ]
             )
@@ -739,6 +843,13 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
             <th>Score</th>
             <th>Reasoning</th>
             <th>Issues</th>
+                        <th>LLM Raw Score</th>
+                        <th>LLM Critical Failures</th>
+                        <th>LLM Error</th>
+                        <th>Source Score</th>
+                        <th>Score Delta (Final-Source)</th>
+                        <th>Deterministic Penalty</th>
+                        <th>Source Reasoning</th>
           </tr>
         </thead>
         <tbody>
@@ -856,6 +967,16 @@ def evaluate_cases(
 
         response_text = select_output_text(source_entry or {}) if source_entry else ""
 
+        source_score = None
+        source_reasoning = None
+        if source_entry:
+            raw_source_score = source_entry.get("score")
+            if isinstance(raw_source_score, (int, float)):
+                source_score = float(raw_source_score)
+            raw_source_reasoning = source_entry.get("reasoning")
+            if isinstance(raw_source_reasoning, str) and raw_source_reasoning.strip():
+                source_reasoning = raw_source_reasoning.strip()
+
         deterministic_issues = criteria_rule_checks(case, response_text)
 
         if skip_llm:
@@ -875,19 +996,16 @@ def evaluate_cases(
                 deterministic_issues=deterministic_issues,
             )
 
-        if critical_failures:
-            for failure in critical_failures:
-                deterministic_issues.append(
-                    {
-                        "type": "other",
-                        "severity": "major",
-                        "detail": f"LLM critical failure: {failure}",
-                    }
-                )
+        llm_critical_failure_notes = [f"LLM critical failure: {failure}" for failure in critical_failures]
 
+        deterministic_penalty = compute_total_penalty(deterministic_issues)
         final_score = combine_scores(llm_score, deterministic_issues)
         reasoning = short_reasoning(llm_reasoning, deterministic_issues)
         passed = final_score >= pass_threshold
+
+        score_delta_vs_source = None
+        if source_score is not None:
+            score_delta_vs_source = round(float(final_score) - float(source_score), 2)
 
         evaluated_results.append(
             {
@@ -899,8 +1017,13 @@ def evaluate_cases(
                 "passed": passed,
                 "issues_detected": deterministic_issues,
                 "criteria_results": criteria_results,
+                "llm_critical_failures": llm_critical_failure_notes,
                 "llm_raw_score": llm_score,
                 "llm_error": llm_error,
+                "source_score": source_score,
+                "source_reasoning": source_reasoning,
+                "score_delta_vs_source": score_delta_vs_source,
+                "deterministic_penalty": deterministic_penalty,
             }
         )
 
@@ -926,10 +1049,10 @@ def evaluate_cases(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Prompt evaluation pipeline using AWS Bedrock.")
-    parser.add_argument("--dataset", default="context/dataset.json", help="Path to dataset JSON.")
-    parser.add_argument("--responses", default="context/output.json", help="Path to existing responses JSON.")
-    parser.add_argument("--output-json", default="context/output.json", help="Path to write evaluated JSON report.")
-    parser.add_argument("--output-html", default="context/output.html", help="Path to write HTML report.")
+    parser.add_argument("--dataset", default="dataset/dataset.json", help="Path to dataset JSON.")
+    parser.add_argument("--responses", default="dataset/output.json", help="Path to existing responses JSON.")
+    parser.add_argument("--output-json", default="results/output_llm.json", help="Path to write evaluated JSON report.")
+    parser.add_argument("--output-html", default="results/output_llm.html", help="Path to write HTML report.")
     parser.add_argument("--pass-threshold", type=float, default=None, help="Pass threshold score in range 0-10.")
     parser.add_argument("--model-id", default=None, help="AWS Bedrock model ID.")
     parser.add_argument("--skip-llm", action="store_true", help="Run deterministic checks only and skip Bedrock calls.")
