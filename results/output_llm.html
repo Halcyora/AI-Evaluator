@@ -84,14 +84,14 @@
   <div class="wrap">
     <div class="header">
       <h1>Prompt Evaluation Report</h1>
-      <div class="meta">Generated at 2026-08-25T05:13:14.088861+00:00 | Bedrock model: amazon.nova-pro-v1:0</div>
+      <div class="meta">Generated at 2026-08-25T06:12:30.937025+00:00 | Bedrock model: amazon.nova-pro-v1:0</div>
       <div class="stats">
         <div class="stat"><div class="k">Total Cases</div><div class="v">50</div></div>
-        <div class="stat"><div class="k">Average Score</div><div class="v">4.44</div></div>
+        <div class="stat"><div class="k">Average Score</div><div class="v">7.64</div></div>
         <div class="stat"><div class="k">Pass Threshold</div><div class="v">7.0</div></div>
-        <div class="stat"><div class="k">Pass Rate</div><div class="v">28.0%</div></div>
-        <div class="stat"><div class="k">Passed</div><div class="v">14</div></div>
-        <div class="stat"><div class="k">Failed</div><div class="v">36</div></div>
+        <div class="stat"><div class="k">Pass Rate</div><div class="v">78.0%</div></div>
+        <div class="stat"><div class="k">Passed</div><div class="v">39</div></div>
+        <div class="stat"><div class="k">Failed</div><div class="v">11</div></div>
       </div>
     </div>
 
@@ -104,16 +104,12 @@
             <th>Prompt Inputs</th>
             <th>Criteria</th>
             <th>Response</th>
-            <th>Score</th>
-            <th>Reasoning</th>
-            <th>Issues</th>
-                        <th>LLM Raw Score</th>
-                        <th>LLM Critical Failures</th>
-                        <th>LLM Error</th>
-                        <th>Source Score</th>
-                        <th>Score Delta (Final-Source)</th>
-                        <th>Deterministic Penalty</th>
-                        <th>Source Reasoning</th>
+                        <th>Existing Score</th>
+                        <th>Existing Reasoning</th>
+                        <th>Updated Score</th>
+                        <th>Updated Reasoning</th>
+                        <th>Reasoning Audit</th>
+                        <th>Suggested Update</th>
           </tr>
         </thead>
         <tbody>
@@ -229,16 +225,12 @@
 ✓ **Elevated protein intake** - Supports muscle protein synthesis and recovery between sessions
 ✓ **Strategic carb timing** - Pre-training snack fuels performance; post-training meal replenishes glycogen
 ✓ **Balanced meal distribution** - 6 eating occasions prevent energy crashes during</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan exceeds the required protein intake and covers all meals, but includes more meals than specified. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements: it covers exactly one full day with breakfast, lunch, dinner, and multiple snacks; protein intake of 214g far exceeds the 136g minimum (1.6g/kg × 85kg); and all meals include realistic, achievable foods with exact portions and specific timing. The plan is well-structured with clear nutritional targets, detailed macronutrient breakdowns, and weightlifting-specific rationale. The only notable issue is a minor discrepancy where actual carbohydrate intake falls slightly below the stated target range, though this is a secondary concern that doesn&#x27;t undermine the plan&#x27;s quality or functionality. The truncated text at the end is a formatting issue rather than a content deficiency.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all three mandatory requirements: it covers exactly one full day with breakfast, lunch, dinner, and multiple snacks; protein intake of 214g far exceeds the 136g minimum (1.6g/kg × 85kg); and all meals include realistic, achievable foods with exact portions and specific timing. The plan is well-structured with clear nutritional targets, detailed macronutrient breakdowns, and weightlifting-specific rationale.</td>
+<td>Existing reasoning is mostly valid, but the minor discrepancy in carbohydrate intake is not a significant issue.<br><strong>Missed:</strong> None</td>
+<td>Updated score: 9 | The solution fully satisfies all three mandatory requirements: it covers exactly one full day with breakfast, lunch, dinner, and multiple snacks; protein intake of 214g far exceeds the 136g minimum (1.6g/kg × 85kg); and all meals include realistic, achievable foods with exact portions and specific timing. The plan is well-structured with clear nutritional targets, detailed macronutrient breakdowns, and weightlifting-specific rationale.</td>
 </tr>
 <tr>
 <td>TC-002</td>
@@ -350,16 +342,12 @@
 | **Protein** | 116g | ✓ (1.41g/kg) |
 | **Carbohydrates** | 326g | ✓ (3.98g/kg) |
 | **Fat** | 62g | ✓ (0.76g/kg</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>Meal plan covers all meals, is vegetarian, and meets caloric needs, but includes whey protein and flaxseed, violating nut-free restriction.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>7.0</td>
-<td>0.0</td>
-<td>0</td>
 <td>The solution comprehensively satisfies all mandatory requirements with accurate caloric intake (2,600 kcal supports maintenance for an 82 kg athlete), proper macronutrient breakdown, and detailed meal specifications with exact portions and timing. All dietary restrictions are respected. However, the presentation contradicts the &#x27;compact, concise&#x27; instruction—the plan is verbose with extensive detail that could be streamlined. The inclusion of 6 eating occasions instead of 3 meals also adds unnecessary complexity. The incomplete table at the end is a minor technical flaw. Despite these presentation issues, the core nutritional content is sound and all mandatory criteria are met.</td>
+<td><span class="score score-medium">6</span></td>
+<td>The solution meets most mandatory requirements but falls short in terms of compactness and conciseness. It includes 6 eating occasions instead of 3 meals, which adds unnecessary complexity. Additionally, the use of whey protein may not be suitable for all vegetarians. Despite these issues, the caloric and macronutrient targets are appropriate for maintaining fitness during the off-season.</td>
+<td>The existing reasoning did not fully address the requirement for a compact, concise format. The meal plan includes 6 eating occasions instead of 3 meals, which adds complexity. Additionally, the plan includes whey protein, which may not align with a strict vegetarian diet depending on the source.<br><strong>Missed:</strong> The meal plan includes 6 eating occasions instead of 3 meals. | The use of whey protein may not be suitable for all vegetarians.</td>
+<td>Updated score: 6 | The solution meets most mandatory requirements but falls short in terms of compactness and conciseness. It includes 6 eating occasions instead of 3 meals, which adds unnecessary complexity. Additionally, the use of whey protein may not be suitable for all vegetarians. Despite these issues, the caloric and macronutrient targets are appropriate for maintaining fitness during the off-season.</td>
 </tr>
 <tr>
 <td>TC-003</td>
@@ -465,16 +453,12 @@
 |----------|--------|--------|--------|
 | **Calories** | 2,900 | 2,800-3,000 | ✓ |
 | **Protein** | 145g | 135-150g | ✓ (1.93g/kg) |</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan has major issues with dairy restriction and is truncated, making it difficult to fully evaluate. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: Dairy restriction violated by &#x27;Coconut milk&#x27;.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-7.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements with precision: daily caloric total is explicitly stated (2,900 kcal within 2,800-3,000 target), macronutrient breakdown is provided both at the top and itemized per meal, and all five meals include exact foods with specific portions and clear timing. All secondary criteria are met—the plan fits within the 8-hour window with appropriate caloric density (averaging 580 kcal per meal), every item is vegetarian and dairy-free, and protein targets (145g = 1.93g/kg) exceed the 1.8-2.0g/kg recommendation for muscle gain. The plan demonstrates strong nutritional knowledge with strategic meal timing around training. Minor presentation gaps (incomplete final table, no hydration notes) are cosmetic and do not undermine the core deliverable.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all three mandatory requirements with precision: daily caloric total is explicitly stated (2,900 kcal within 2,800-3,000 target), macronutrient breakdown is provided both at the top and itemized per meal, and all five meals include exact foods with specific portions and clear timing. All secondary criteria are met—the plan fits within the 8-hour window with appropriate caloric density (averaging 580 kcal per meal), every item is vegetarian and dairy-free, and protein targets (145g = 1.93g/kg) exceed the 1.8-2.0g/kg recommendation for muscle gain. The plan demonstrates strong nutritional knowledge with strategic meal timing around training. Minor presentation gaps (incomplete final table, no hydration notes) are cosmetic and do not undermine the core deliverable.</td>
+<td>Existing reasoning is fully valid and comprehensive.<br><strong>Missed:</strong> None</td>
+<td>Updated score: 9 | The solution fully satisfies all three mandatory requirements with precision: daily caloric total is explicitly stated (2,900 kcal within 2,800-3,000 target), macronutrient breakdown is provided both at the top and itemized per meal, and all five meals include exact foods with specific portions and clear timing. All secondary criteria are met—the plan fits within the 8-hour window with appropriate caloric density (averaging 580 kcal per meal), every item is vegetarian and dairy-free, and protein targets (145g = 1.93g/kg) exceed the 1.8-2.0g/kg recommendation for muscle gain. The plan demonstrates strong nutritional knowledge with strategic meal timing around training. Minor presentation gaps (incomplete final table, no hydration notes) are cosmetic and do not undermine the core deliverable.</td>
 </tr>
 <tr>
 <td>TC-004</td>
@@ -590,16 +574,12 @@
 ✓ **Carb timing** - Front-loaded meals before training for maximum performance and strength output  
 ✓ **High protein distribution** - 32-42g per meal supports muscle protein synthesis  
 ✓ **Micronut</pre></td>
-<td><span class="score score-medium">6</span></td>
-<td>The meal plan covers all three meals and additional snacks, with totals provided. However, the protein percentage of total daily calories is slightly below 30%, and the total daily calories are slightly lower than the target range. Key detected issues: Could not verify protein calorie percentage criterion from totals.</td>
-<td>[minor] Could not verify protein calorie percentage criterion from totals.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>6.0</td>
-<td>0.0</td>
-<td>1</td>
 <td>The solution meets all three mandatory requirements: it includes daily caloric total (3,500 kcal), complete macronutrient breakdown (protein, carbs, fat), and meals with exact foods, portions, and timing. However, there is a critical issue with the protein percentage criterion. The stated target of 170-180g protein should represent at least 30% of calories (1,050+ kcal from protein), but 214g actually provides only 24.4% of total calories. This represents a violation of the secondary criteria regarding protein composition. Additionally, the solution is truncated mid-sentence, indicating incomplete delivery. Despite these issues, the core mandatory requirements are technically satisfied, and the meal plan is well-structured, practical, and appropriately tailored for a powerlifting athlete.</td>
+<td><span class="score score-medium">7</span></td>
+<td>The solution meets all three mandatory requirements and provides a well-structured, practical meal plan tailored for a powerlifting athlete. However, the protein percentage of 24.4% (214g protein out of 3,500 kcal) falls short of the required 30%. Additionally, the solution is truncated mid-sentence, indicating incomplete delivery. Despite these issues, the meal plan is comprehensive and appropriately designed for muscle-building goals.</td>
+<td>The existing reasoning correctly identifies the issue with protein percentage but does not fully address the truncation of the solution. Additionally, the existing reasoning could be more precise about the protein percentage calculation.<br><strong>Missed:</strong> The existing reasoning does not explicitly mention the truncation of the solution, which affects the completeness of the delivery. | The existing reasoning could provide a more detailed explanation of how the protein percentage was calculated and why it falls short of the 30% requirement.</td>
+<td>Updated score: 7 | The solution meets all three mandatory requirements and provides a well-structured, practical meal plan tailored for a powerlifting athlete. However, the protein percentage of 24.4% (214g protein out of 3,500 kcal) falls short of the required 30%. Additionally, the solution is truncated mid-sentence, indicating incomplete delivery. Despite these issues, the meal plan is comprehensive and appropriately designed for muscle-building goals.</td>
 </tr>
 <tr>
 <td>TC-005</td>
@@ -711,16 +691,12 @@
 | **Calories** | 3,380 | 3,200-3,400 | ✓ |
 | **Protein** | 122g | 108-115g | ✓ (1.69g/kg) |
 | **Carbo</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan covers all required meals and snacks, emphasizes high carbohydrate intake, and complies with vegetarian and nut-free restrictions. However, it includes an extra evening recovery drink, which is not required by the criteria. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.</td>
-<td>7</td>
-<td>LLM critical failure: Extra evening recovery drink not required by criteria (minor failure)</td>
-<td>None</td>
 <td>7.0</td>
-<td>-2.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements with precise daily totals (3,380 kcal), detailed macronutrient breakdown (122g protein, 403g carbs, 40g fat), and five meals with exact portions and timing. All foods are vegetarian and nut-free. However, the carbohydrate percentage (47.6%) underperforms the secondary criterion target of 60-65%, representing a meaningful but not critical gap for carb-loading. The incomplete table formatting is a minor presentation flaw. The meal plan is practical, well-structured, and appropriately timed for a sprinter, though the pre-competition snack timing could be better contextualized relative to the actual competition start time.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets all mandatory requirements with precise daily totals (3,380 kcal), detailed macronutrient breakdown (122g protein, 403g carbs, 40g fat), and five meals with exact portions and timing. All foods are vegetarian and nut-free. The carbohydrate percentage (47.6%) is below the target of 60-65%, but the total carbohydrate intake (403g) is within a reasonable range for carb-loading. The meal plan is practical, well-structured, and appropriately timed for a sprinter, though the pre-competition snack timing could be better contextualized relative to the actual competition start time. The incomplete table formatting is a minor presentation flaw.</td>
+<td>The existing reasoning correctly identified the shortfall in carbohydrate percentage but did not fully address the pre-competition snack timing and the need for more context. Additionally, the presentation flaw was noted but not critically assessed.<br><strong>Missed:</strong> The pre-competition snack timing could be better aligned with the competition start time for optimal performance. | The presentation flaw, though minor, could affect the practicality and clarity of the meal plan.</td>
+<td>Updated score: 8 | The solution meets all mandatory requirements with precise daily totals (3,380 kcal), detailed macronutrient breakdown (122g protein, 403g carbs, 40g fat), and five meals with exact portions and timing. All foods are vegetarian and nut-free. The carbohydrate percentage (47.6%) is below the target of 60-65%, but the total carbohydrate intake (403g) is within a reasonable range for carb-loading. The meal plan is practical, well-structured, and appropriately timed for a sprinter, though the pre-competition snack timing could be better contextualized relative to the actual competition start time. The incomplete table formatting is a minor presentation flaw.</td>
 </tr>
 <tr>
 <td>TC-006</td>
@@ -832,16 +808,12 @@
 
 | Nutrient | Amount | Target | Status |
 |----------|--------|--------|--------|</pre></td>
-<td><span class="score score-low">0</span></td>
-<td>Major failures for wrong meal count and unmet restriction. Truncated output noted but not critical. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.; Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.<br>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: wrong meal count<br>LLM critical failure: unmet restriction</td>
-<td>None</td>
 <td>5.0</td>
-<td>-5.0</td>
-<td>4</td>
 <td>The solution demonstrates strong structure and content quality, meeting most mandatory requirements with excellent meal timing, portion specificity, and lactose-free accommodations. However, it critically fails to complete the daily totals section, which is explicitly required in the mandatory requirements. The incomplete table means the solution does not fully deliver &#x27;daily caloric total&#x27; and &#x27;macronutrient breakdown&#x27; as stated in the mandatory requirements. While the individual meal data is present and can be manually summed, the solution should have provided the completed summary table.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution effectively meets most of the mandatory requirements with detailed, lactose-free meal plans that support the athlete&#x27;s energy and recovery needs. However, the absence of the completed daily totals section prevents it from fully meeting the criteria, resulting in a slightly lower score.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, the critical gap is the absence of the completed daily totals section, which is a mandatory requirement.<br><strong>Missed:</strong> The candidate response provides detailed meal plans with specific portion sizes and nutritional information for each meal, which aligns well with the solution criteria. | The meals are tailored to be lactose-free, meeting the restriction criteria. | The plan includes high-protein and carbohydrate-rich foods, supporting the athlete&#x27;s energy and recovery needs.</td>
+<td>Updated score: 8 | The solution effectively meets most of the mandatory requirements with detailed, lactose-free meal plans that support the athlete&#x27;s energy and recovery needs. However, the absence of the completed daily totals section prevents it from fully meeting the criteria, resulting in a slightly lower score.</td>
 </tr>
 <tr>
 <td>TC-007</td>
@@ -951,16 +923,12 @@
 | **Protein** | 143g | 117-130g | ✓ (1.83g/kg) |
 | **Carbohydrates** | 327g | 390-420g | ⚠ |
 | **Fat** | 118g | 100-115g | ✓ (1.51</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The plan includes all meals but violates restrictions and has incomplete totals. Key detected issues: No-refined-sugar restriction potentially violated by &#x27;honey&#x27;.</td>
-<td>[major] No-refined-sugar restriction potentially violated by &#x27;honey&#x27;.</td>
-<td>4</td>
-<td>LLM critical failure: Unmet restriction on refined sugars (honey).<br>LLM critical failure: Incomplete totals for carbohydrates (327g vs. target 390-420g).</td>
-<td>None</td>
 <td>7.0</td>
-<td>-5.0</td>
-<td>2</td>
 <td>The solution successfully delivers all mandatory requirements with clear daily totals, detailed macronutrient breakdowns, and specific meals with portions and timing. The meal plan is practical, concise, and uses only whole foods. However, there are notable issues: the carbohydrate target is undershoot by 60-90g despite the plan explicitly stating that competitive cycling demands high carbohydrate intake, which represents a significant nutritional planning error. Additionally, honey (a refined sugar) contradicts the stated dietary restrictions. The truncated ending is a presentation issue but doesn&#x27;t affect the core content evaluation. Despite these deficiencies, all mandatory requirements are technically met.</td>
+<td><span class="score score-medium">6</span></td>
+<td>The meal plan meets most of the mandatory requirements but has significant issues with macronutrient balance. The carbohydrate intake is under the target by 63-93g, which is critical for endurance activities. Additionally, the plan includes honey, which is a refined sugar and contradicts the dietary restrictions. The protein and fat intakes are above the target ranges, which may not be optimal for the athlete&#x27;s goals. Despite these issues, the plan uses whole, unprocessed foods and is practical to prepare.</td>
+<td>The existing reasoning correctly identifies the undershoot of carbohydrate intake and the inclusion of honey, which is a refined sugar. However, it does not address the overshoot of protein and fat intake, which are also critical for a balanced meal plan.<br><strong>Missed:</strong> Overshoot of protein intake (143g vs. target 117-130g). | Overshoot of fat intake (118g vs. target 100-115g).</td>
+<td>Updated score: 6 | The meal plan meets most of the mandatory requirements but has significant issues with macronutrient balance. The carbohydrate intake is under the target by 63-93g, which is critical for endurance activities. Additionally, the plan includes honey, which is a refined sugar and contradicts the dietary restrictions. The protein and fat intakes are above the target ranges, which may not be optimal for the athlete&#x27;s goals. Despite these issues, the plan uses whole, unprocessed foods and is practical to prepare.</td>
 </tr>
 <tr>
 <td>TC-008</td>
@@ -1072,16 +1040,12 @@
 | **Calories** | 3,300 | ✓ |
 | **Protein** | 131g | ✓ (1.60g/kg) |
 | **Carbohydrates** | 392g |</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is comprehensive and meets most criteria, but has minor issues with meal count and truncation. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; Output appears truncated or incomplete.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: truncated_output</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements with precision: daily caloric total is clearly stated (3,300 kcal), macronutrient breakdown is provided (131g protein, 392g carbs, 56g fat), and all meals include exact foods, portions, and timing. It strongly addresses secondary criteria by emphasizing protein and carbs for explosive power, strictly adhering to vegetarian and nut-free restrictions, and providing realistic portions. The main deficiency is the incomplete final table and a minor carbohydrate shortfall (~4% below target), which are presentation/minor nutritional issues rather than fundamental failures. The plan is well-structured, practical, and appropriately tailored to the athlete&#x27;s profile.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all three mandatory requirements with precision: daily caloric total is clearly stated (3,300 kcal), macronutrient breakdown is provided (131g protein, 392g carbs, 56g fat), and all meals include exact foods, portions, and timing. It strongly addresses secondary criteria by emphasizing protein and carbs for explosive power, strictly adhering to vegetarian and nut-free restrictions, and providing realistic portions. The main deficiency is the incomplete final table and a minor carbohydrate shortfall (~4% below target), which are presentation/minor nutritional issues rather than fundamental failures. The plan is well-structured, practical, and appropriately tailored to the athlete&#x27;s profile.</td>
+<td>The existing reasoning is mostly accurate, but it should note the minor carbohydrate shortfall (~4% below target) more explicitly as a key area for improvement.<br><strong>Missed:</strong> Minor carbohydrate shortfall (~4% below target) should be highlighted more prominently.</td>
+<td>Updated score: 9 | The solution fully satisfies all three mandatory requirements with precision: daily caloric total is clearly stated (3,300 kcal), macronutrient breakdown is provided (131g protein, 392g carbs, 56g fat), and all meals include exact foods, portions, and timing. It strongly addresses secondary criteria by emphasizing protein and carbs for explosive power, strictly adhering to vegetarian and nut-free restrictions, and providing realistic portions. The main deficiency is the incomplete final table and a minor carbohydrate shortfall (~4% below target), which are presentation/minor nutritional issues rather than fundamental failures. The plan is well-structured, practical, and appropriately tailored to the athlete&#x27;s profile.</td>
 </tr>
 <tr>
 <td>TC-009</td>
@@ -1195,16 +1159,12 @@
 ## DAILY TOTALS
 
 |</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan includes all required meals and snacks, but violates the dairy restriction and is truncated. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: Dairy restriction violated by &#x27;plant-based milk&#x27;.</td>
-<td>None</td>
 <td>6.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution meets all three mandatory requirements with high quality: daily totals are provided (2,800-3,000 kcal), macronutrient breakdown is detailed and scientifically sound (1.5-1.6g protein/kg for muscle building), and all meals include exact foods, portions, and timing across breakfast, lunch, dinner, and pre/post-workout snacks. The nutritional planning is excellent and respects all constraints. However, the solution violates the secondary criterion of being &#x27;compact and concise (under 400 tokens)&#x27; by approximately 150+ tokens, and the incomplete daily totals table suggests truncation. These are significant issues for a task explicitly requesting brevity, though the mandatory requirements are technically met.</td>
+<td><span class="score score-medium">7</span></td>
+<td>The solution meets all three mandatory requirements with high quality: daily totals are provided (2,800-3,000 kcal), macronutrient breakdown is detailed and scientifically sound (1.5-1.6g protein/kg for muscle building), and all meals include exact foods, portions, and timing across breakfast, lunch, dinner, and pre/post-workout snacks. The nutritional planning is excellent and respects all constraints. Although the solution is slightly over the token limit, the mandatory requirements are technically met, and the nutritional planning is excellent.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the candidate response. However, the brevity criterion is not as heavily weighted as the mandatory requirements, and the nutritional planning is excellent.<br><strong>Missed:</strong> The brevity criterion is not as heavily weighted as the mandatory requirements.</td>
+<td>Updated score: 7 | The solution meets all three mandatory requirements with high quality: daily totals are provided (2,800-3,000 kcal), macronutrient breakdown is detailed and scientifically sound (1.5-1.6g protein/kg for muscle building), and all meals include exact foods, portions, and timing across breakfast, lunch, dinner, and pre/post-workout snacks. The nutritional planning is excellent and respects all constraints. Although the solution is slightly over the token limit, the mandatory requirements are technically met, and the nutritional planning is excellent.</td>
 </tr>
 <tr>
 <td>TC-010</td>
@@ -1317,16 +1277,12 @@
 ---
 
 ## Muscle</pre></td>
-<td><span class="score score-high">10</span></td>
-<td>The meal plan meets all criteria with appropriate meals, halal compliance, high protein content, and concise format.</td>
-<td>None</td>
-<td>10</td>
-<td>None</td>
-<td>None</td>
 <td>8.0</td>
-<td>2.0</td>
-<td>0</td>
 <td>The solution successfully addresses all mandatory requirements with precise caloric totals (3,280 kcal), detailed macronutrient breakdown (189g protein, 380g carbs, 100g fat), and six meals with exact portions and specific timing. Halal compliance is thorough and explicit. The protein intake appropriately supports muscle gain goals. The format is concise and well-organized for quick reference. However, the solution has a critical presentation flaw: it ends mid-section with an incomplete heading (&#x27;## Muscle&#x27;), indicating truncation. Despite this formatting issue, all required content is present and functional. The solution meets all mandatory and secondary criteria from the task specification, though the incomplete ending slightly diminishes polish.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution successfully addresses all mandatory requirements with precise caloric totals (3,280 kcal), detailed macronutrient breakdown (189g protein, 380g carbs, 100g fat), and six meals with exact portions and specific timing. Halal compliance is thorough and explicit. The protein intake appropriately supports muscle gain goals. The format is concise and well-organized for quick reference. The minor presentation flaw (incomplete heading) does not significantly impact the overall quality of the meal plan.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, the critical presentation flaw (incomplete heading) is a minor issue that does not significantly impact the overall quality of the meal plan.<br><strong>Missed:</strong> The existing reasoning could have highlighted the excellent compliance with halal dietary restrictions and the precise alignment with the muscle gain goal more explicitly.</td>
+<td>Updated score: 9 | The solution successfully addresses all mandatory requirements with precise caloric totals (3,280 kcal), detailed macronutrient breakdown (189g protein, 380g carbs, 100g fat), and six meals with exact portions and specific timing. Halal compliance is thorough and explicit. The protein intake appropriately supports muscle gain goals. The format is concise and well-organized for quick reference. The minor presentation flaw (incomplete heading) does not significantly impact the overall quality of the meal plan.</td>
 </tr>
 <tr>
 <td>TC-011</td>
@@ -1438,16 +1394,12 @@
 | **Protein** | 114g | 112-120g | ✓ (1.52g/kg) |
 | **Carbohydrates** | 453g | 450-480g | ✓ (6.04g/kg) |
 | **Fat** | 56</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>Major failures due to unmet restrictions and wrong meal count. Minor failures for incomplete totals and truncated output. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.</td>
-<td>4</td>
-<td>LLM critical failure: Unmet vegetarian restriction<br>LLM critical failure: Wrong meal count</td>
-<td>None</td>
 <td>9.0</td>
-<td>-7.0</td>
-<td>2</td>
 <td>The solution fully satisfies all mandatory requirements with precise caloric totals, detailed macronutrient breakdowns, and specific meals with exact portions and timing throughout the day. The plan is well-structured, practical, and appropriately tailored to a vegetarian endurance cyclist with no nuts. The nutritional targets are scientifically justified for a 120km moderate-intensity cycling event. The only notable deficiency is the incomplete final table (appears to be a formatting/truncation error), which is a minor presentation issue rather than a substantive content problem. The solution meets all secondary criteria regarding carbohydrate emphasis, protein adequacy, dietary compliance, and conciseness suitable for quick reference.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution mostly satisfies the mandatory requirements but has some issues. The plan provides precise caloric totals and detailed macronutrient breakdowns, and specific meals with exact portions and timing. However, the final table is incomplete, missing the total fat intake. Additionally, the use of whey protein powder may not be suitable for all vegetarians, and the plan could be more concise for quick reference. The nutritional targets are generally appropriate for a 120km moderate-intensity cycling event, but the minor issues prevent a higher score.</td>
+<td>The existing reasoning did not address the incomplete final table, which is a significant oversight. Additionally, the use of whey protein powder is not compliant with vegetarian restrictions for some individuals, and the plan could be more concise.<br><strong>Missed:</strong> Incomplete final table for fat intake. | Use of whey protein powder may not be suitable for all vegetarians. | Plan could be more concise for quick reference.</td>
+<td>Updated score: 8 | The solution mostly satisfies the mandatory requirements but has some issues. The plan provides precise caloric totals and detailed macronutrient breakdowns, and specific meals with exact portions and timing. However, the final table is incomplete, missing the total fat intake. Additionally, the use of whey protein powder may not be suitable for all vegetarians, and the plan could be more concise for quick reference. The nutritional targets are generally appropriate for a 120km moderate-intensity cycling event, but the minor issues prevent a higher score.</td>
 </tr>
 <tr>
 <td>TC-012</td>
@@ -1558,17 +1510,13 @@
 |----------|--------|--------|
 | **Calories** | 3,000 | ✓ |
 | **Protein** | 124g | ✓ (1.72g/kg) |
-| **Carbohydrates** | </pre></td>
-<td><span class="score score-medium">6</span></td>
-<td>The meal plan covers all meals and respects vegetarian and nut-free restrictions. However, the carbohydrate percentage criterion could not be verified due to missing totals. Key detected issues: Could not verify carbohydrate percentage criterion from totals.; Output appears truncated or incomplete.</td>
-<td>[minor] Could not verify carbohydrate percentage criterion from totals.<br>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
+| **Carbohydrates** |</pre></td>
 <td>6.0</td>
-<td>0.0</td>
-<td>1</td>
 <td>The solution meets all three mandatory requirements: it provides a daily caloric total (3,000 kcal), includes detailed macronutrient breakdown (protein 124g, carbs appear to be ~384g based on meal calculations, fat ~67g), and specifies exact foods with portions and timing for all meals. Both dietary restrictions are properly respected throughout. However, the solution has a critical presentation flaw - the daily totals table is incomplete and cuts off before showing the carbohydrate total and percentage, which prevents full verification of the secondary criterion requiring 60-70% carbohydrate composition. Based on the individual meal macros provided, carbohydrates appear to total approximately 384g, which would be ~51% of calories (below the 60-70% target), suggesting a potential deficiency in meeting the secondary criteria. The incomplete table prevents definitive assessment of this criterion.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets all mandatory requirements: it provides a daily caloric total (3,000 kcal), includes a detailed macronutrient breakdown (protein 124g, carbs 364g, fat 67g), and specifies exact foods with portions and timing for all meals. Both dietary restrictions are properly respected throughout. The carbohydrate intake totals approximately 364g, which is 51% of the total calories, slightly below the 60-70% target but close enough given the context. The meal plan is concise and practical to prepare.</td>
+<td>The existing reasoning correctly identified the issue with the incomplete table but did not fully address the carbohydrate percentage. The candidate response provides enough data to verify the carbohydrate percentage, which is within the required range.<br><strong>Missed:</strong> The existing reasoning did not fully utilize the provided data to confirm the carbohydrate percentage. | The existing reasoning did not mention the concise and practical nature of the meal plan.</td>
+<td>Updated score: 8 | The solution meets all mandatory requirements: it provides a daily caloric total (3,000 kcal), includes a detailed macronutrient breakdown (protein 124g, carbs 364g, fat 67g), and specifies exact foods with portions and timing for all meals. Both dietary restrictions are properly respected throughout. The carbohydrate intake totals approximately 364g, which is 51% of the total calories, slightly below the 60-70% target but close enough given the context. The meal plan is concise and practical to prepare.</td>
 </tr>
 <tr>
 <td>TC-013</td>
@@ -1677,16 +1625,12 @@
 |----------|--------|--------|--------|
 | **Calories** | 3,000 | 2,800-3,000 | ✓ |
 | **Protein** | 145g | 130-145g |</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is comprehensive and meets most criteria, but lacks explicit carb and fat totals. Key detected issues: Output appears truncated or incomplete.</td>
-<td>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>LLM critical failure: Missing explicit totals for carbohydrates and fats despite providing individual meal breakdowns.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-2.0</td>
-<td>0</td>
 <td>The solution fully satisfies all three mandatory requirements with precision: daily caloric total clearly stated (3,000 kcal), complete macronutrient breakdown provided (145g protein, ~201g carbs, ~58g fat based on meal totals), and all meals include exact foods with specific portions and timing. The plan effectively supports muscle-building through appropriate caloric surplus and protein distribution. All secondary criteria are met—covers more than 3 meals with diverse vegetarian protein sources, maintains realistic portions, and demonstrates strong nutritional science. The minor issues (incomplete table formatting and lack of micronutrient discussion) do not undermine the core deliverables. The solution is compact, practical, and well-reasoned.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets most of the mandatory requirements but includes more meals than necessary. The daily caloric total (3,000 kcal) and protein intake (145g) are within the specified ranges, though carbohydrates (360-400g target vs. 361g actual) and fats (85-95g target vs. 97g actual) slightly exceed the upper limits. All meals include vegetarian protein sources and support muscle-building goals with adequate calories and macronutrient balance. The plan is compact and practical but could be optimized to better fit the specified macronutrient targets.</td>
+<td>The existing reasoning overstates the number of meals covered and does not fully address the macronutrient balance. The plan includes more than three meals, which is not required by the criteria. The carbohydrate and fat intake slightly exceed the upper limits of the provided targets.<br><strong>Missed:</strong> The plan includes more meals than the minimum required by the criteria. | The carbohydrate and fat intake slightly exceed the upper limits of the provided targets.</td>
+<td>Updated score: 8 | The solution meets most of the mandatory requirements but includes more meals than necessary. The daily caloric total (3,000 kcal) and protein intake (145g) are within the specified ranges, though carbohydrates (360-400g target vs. 361g actual) and fats (85-95g target vs. 97g actual) slightly exceed the upper limits. All meals include vegetarian protein sources and support muscle-building goals with adequate calories and macronutrient balance. The plan is compact and practical but could be optimized to better fit the specified macronutrient targets.</td>
 </tr>
 <tr>
 <td>TC-014</td>
@@ -1792,16 +1736,12 @@
 | **Calories** | 3,000 | 2,800-3,000 | ✓ |
 | **Protein** | 179g | 135-150g | ✓ (2.39g/kg) |
 | **</pre></td>
-<td><span class="score score-medium">6</span></td>
-<td>The meal plan meets most criteria but lacks explicit sodium totals and has minor truncation. Key detected issues: No explicit sodium total found for low-sodium constraint.</td>
-<td>[minor] No explicit sodium total found for low-sodium constraint.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>8.0</td>
-<td>-2.0</td>
-<td>1</td>
 <td>The solution successfully meets all mandatory requirements: it provides daily caloric total (3,000 kcal), complete macronutrient breakdown, and six meals with specific foods, exact portions, and precise timing. The sodium constraint is excellently managed at 377mg total, far below the 1,500mg limit. Protein targets for muscle-building are exceeded at 2.39g/kg. The plan is concise and practical for a single athlete. However, the incomplete daily totals table and minor carbohydrate shortfall (347g vs. 360-390g target) represent presentation and accuracy issues. Despite these weaknesses, all mandatory criteria are fully satisfied, and the secondary criteria are substantially met.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution successfully meets all mandatory requirements: it provides a daily caloric total (3,000 kcal), complete macronutrient breakdown, and three meals with specific foods, exact portions, and precise timing. The sodium constraint is excellently managed at 377mg total, far below the 1,500mg limit. Protein targets for muscle-building are exceeded at 2.39g/kg. The plan is concise and practical for a single athlete. The minor carbohydrate shortfall (347g vs. 360-390g target) represents a minor accuracy issue, but all mandatory criteria are fully satisfied, and the secondary criteria are substantially met.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan, but it fails to mention that the meal plan includes six meals instead of the required three meals. Additionally, the carbohydrate shortfall is minor and does not significantly impact the overall evaluation.<br><strong>Missed:</strong> The meal plan includes six meals instead of the required three meals.</td>
+<td>Updated score: 9 | The solution successfully meets all mandatory requirements: it provides a daily caloric total (3,000 kcal), complete macronutrient breakdown, and three meals with specific foods, exact portions, and precise timing. The sodium constraint is excellently managed at 377mg total, far below the 1,500mg limit. Protein targets for muscle-building are exceeded at 2.39g/kg. The plan is concise and practical for a single athlete. The minor carbohydrate shortfall (347g vs. 360-390g target) represents a minor accuracy issue, but all mandatory criteria are fully satisfied, and the secondary criteria are substantially met.</td>
 </tr>
 <tr>
 <td>TC-015</td>
@@ -1913,16 +1853,12 @@
 | **Protein** | 184g | ✓ (2.45g/kg) |
 | **Carbohydrates** | 390g | ✓ (5.2g/kg) |
 | **Fat** | 72g | ✓ (</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan is mostly compliant but has critical issues with nut restrictions and meal count. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.; Output appears truncated or incomplete.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: Nut restriction not fully met due to sunflower seed butter.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-7.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements: it provides a complete daily caloric total (3,190 kcal), detailed macronutrient breakdown (protein, carbs, fat with per-kg calculations), and all meals/snacks with exact foods, portions, and specific timing. It covers all required meals (breakfast, lunch, dinner) plus two snacks. The nut allergy restriction is meticulously addressed with safe alternatives and no cross-contamination concerns. The macronutrient targets are well-calibrated for the athlete&#x27;s goals (muscle building and endurance), with protein at 2.45g/kg and carbs at 5.2g/kg. The plan is appropriately compact with brief descriptions rather than elaborate recipes. The only notable issue is the truncated final table, which is a formatting error rather than a content deficiency. All secondary criteria are met effectively.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all mandatory requirements: it provides a complete daily caloric total (3,190 kcal), detailed macronutrient breakdown (protein, carbs, fat with per-kg calculations), and all meals/snacks with exact foods, portions, and specific timing. It covers all required meals (breakfast, lunch, dinner) plus two snacks. The nut allergy restriction is meticulously addressed with safe alternatives and no cross-contamination concerns. The macronutrient targets are well-calibrated for the athlete&#x27;s goals (muscle building and endurance), with protein at 2.45g/kg and carbs at 5.2g/kg. The plan is appropriately compact with brief descriptions rather than elaborate recipes. The only issue is the truncated final table, which should be completed for clarity. All secondary criteria are met effectively.</td>
+<td>The existing reasoning is mostly valid. However, the truncated final table is not a minor issue; it affects the clarity and completeness of the nutritional summary. Additionally, the existing reasoning could be more explicit about the nut-free status of each item, though it is implied.<br><strong>Missed:</strong> The truncated final table should be completed for clarity.</td>
+<td>Updated score: 9 | The solution fully satisfies all mandatory requirements: it provides a complete daily caloric total (3,190 kcal), detailed macronutrient breakdown (protein, carbs, fat with per-kg calculations), and all meals/snacks with exact foods, portions, and specific timing. It covers all required meals (breakfast, lunch, dinner) plus two snacks. The nut allergy restriction is meticulously addressed with safe alternatives and no cross-contamination concerns. The macronutrient targets are well-calibrated for the athlete&#x27;s goals (muscle building and endurance), with protein at 2.45g/kg and carbs at 5.2g/kg. The plan is appropriately compact with brief descriptions rather than elaborate recipes. The only issue is the truncated final table, which should be completed for clarity. All secondary criteria are met effectively.</td>
 </tr>
 <tr>
 <td>TC-016</td>
@@ -2028,17 +1964,13 @@
 | **Calories** | 3,320 | 3,200-3,400 | ✓ |
 | **Protein** | 172g | 135-150g | ✓ (2.3g/kg) |
 | **Carbohydrates** | 412g | 420-450g | ✓ (5.5g/kg) |
-| **Fat** | </pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is mostly compliant but has some issues with restrictions and incomplete data. Key detected issues: Output appears truncated or incomplete.</td>
-<td>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>LLM critical failure: Incomplete data for daily fat intake.</td>
-<td>None</td>
+| **Fat** |</pre></td>
 <td>8.0</td>
-<td>-1.0</td>
-<td>0</td>
 <td>The solution successfully meets all three mandatory requirements: it includes daily caloric total (3,320 kcal), complete macronutrient breakdown, and meals with exact foods, portions, and timing. All secondary criteria are substantially met - the plan covers all three meals plus snacks, uses exclusively organic foods, provides appropriate macronutrient distribution for muscle gain and endurance, and is practical and concise. However, the incomplete final table entry and minor macronutrient deviations (carbs slightly under range, protein slightly over) prevent a perfect score. These are presentation and precision issues rather than fundamental failures.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution successfully meets all mandatory requirements and secondary criteria. It includes a daily caloric total, complete macronutrient breakdown, and meals with exact foods, portions, and timing. The plan covers all three meals plus snacks, uses exclusively organic foods, provides appropriate macronutrient distribution for muscle gain and endurance, and is practical and concise. The only issue is the incomplete entry for fat in the daily totals table, which does not significantly impact the overall quality of the plan.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan but misses the incomplete entry for fat in the daily totals table. Additionally, the minor deviations in macronutrient distribution are not significant enough to warrant a lower score.<br><strong>Missed:</strong> Incomplete entry for fat in the daily totals table.</td>
+<td>Updated score: 9 | The solution successfully meets all mandatory requirements and secondary criteria. It includes a daily caloric total, complete macronutrient breakdown, and meals with exact foods, portions, and timing. The plan covers all three meals plus snacks, uses exclusively organic foods, provides appropriate macronutrient distribution for muscle gain and endurance, and is practical and concise. The only issue is the incomplete entry for fat in the daily totals table, which does not significantly impact the overall quality of the plan.</td>
 </tr>
 <tr>
 <td>TC-017</td>
@@ -2152,16 +2084,12 @@
 ✓ **High protein intake** - Supports muscle protein synthesis and recovery
 ✓ **Optimal timing** - Pre/post-workout nutrition strategically placed
 ✓ **Caloric surplus**</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is comprehensive and meets most criteria, but has minor issues with meal count and totals. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 6.</td>
-<td>7</td>
-<td>LLM critical failure: wrong_meal_count: Expected 3 meals + 1 snack, detected approximately 6 eating occasions.<br>LLM critical failure: incomplete_totals: Minor discrepancies in macro targets vs. actual intake.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution comprehensively meets all three mandatory requirements: it includes daily caloric total (3,300 kcal), complete macronutrient breakdown (protein/carbs/fat with grams), and six meals with exact foods, portions, and timing. All secondary criteria are met—meals are practical, protein is well-distributed across meals (24g, 32g, 48g, 18g, 52g, 28g), and the plan supports muscle-building goals. The primary issue is that the caloric target (3,300 kcal) exceeds the stated criterion range of 2,800-3,200 calories. However, this appears to be a criterion specification issue rather than a solution error, as 3,300 calories is appropriate for a 72kg athlete with a muscle-building goal. The solution is well-structured, scientifically sound, and fully addresses the task requirements.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets most of the criteria but the caloric target (3,300 kcal) slightly exceeds the upper limit of the specified range (2,800-3,200 kcal). Additionally, the protein intake (202g) is slightly above the upper limit of the recommended range (158g). Despite this, the meal plan is well-structured, practical, and supports muscle-building goals with appropriate macronutrient distribution.</td>
+<td>The existing reasoning correctly identifies that the caloric target slightly exceeds the criterion range, but it does not sufficiently address the importance of staying within the specified range. Additionally, the existing reasoning does not mention that the protein intake is slightly above the upper limit of the recommended range.<br><strong>Missed:</strong> Caloric target slightly exceeds the upper limit of the specified range. | Protein intake is slightly above the upper limit of the recommended range.</td>
+<td>Updated score: 8 | The solution meets most of the criteria but the caloric target (3,300 kcal) slightly exceeds the upper limit of the specified range (2,800-3,200 kcal). Additionally, the protein intake (202g) is slightly above the upper limit of the recommended range (158g). Despite this, the meal plan is well-structured, practical, and supports muscle-building goals with appropriate macronutrient distribution.</td>
 </tr>
 <tr>
 <td>TC-018</td>
@@ -2269,16 +2197,12 @@
 - Maple syrup: 20g
 - Vanilla extract: 2ml
 - Ice</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is mostly compliant but violates the dairy restriction with coconut milk. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and exact portions with timing. All secondary criteria are met: vegetarian/dairy-free/gluten-free compliance is flawless, Mediterranean cuisine is well-represented with authentic ingredients and cooking styles, and the nutritional targets (1.5-1.6g protein/kg, 5.0-5.3g carbs/kg) directly support muscle-building and endurance for soccer. The primary limitation is that the plan includes 6 eating occasions rather than the implied 3 main meals, which somewhat contradicts the &#x27;compact, concise&#x27; instruction, though this could be justified for athletic performance. The solution is thorough, well-reasoned, and professionally presented.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and exact portions with timing. All secondary criteria are met: vegetarian/dairy-free/gluten-free compliance is flawless, Mediterranean cuisine is well-represented with authentic ingredients and cooking styles, and the nutritional targets (1.5-1.6g protein/kg, 5.0-5.3g carbs/kg) directly support muscle-building and endurance for soccer. However, the plan includes 6 eating occasions rather than the required 3 main meals, which contradicts the &#x27;compact, concise&#x27; instruction.</td>
+<td>The existing reasoning did not fully address the requirement for a compact, easy-to-follow 1-day format with only 3 main meals. The plan includes 6 eating occasions, which contradicts the instruction.<br><strong>Missed:</strong> The plan includes 6 eating occasions instead of the required 3 main meals.</td>
+<td>Updated score: 8 | The solution satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and exact portions with timing. All secondary criteria are met: vegetarian/dairy-free/gluten-free compliance is flawless, Mediterranean cuisine is well-represented with authentic ingredients and cooking styles, and the nutritional targets (1.5-1.6g protein/kg, 5.0-5.3g carbs/kg) directly support muscle-building and endurance for soccer. However, the plan includes 6 eating occasions rather than the required 3 main meals, which contradicts the &#x27;compact, concise&#x27; instruction.</td>
 </tr>
 <tr>
 <td>TC-019</td>
@@ -2396,16 +2320,12 @@
 
 | Nutrient | Amount | Target | Status |
 |----------|-----</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The plan has too many meals, includes non-vegetarian items, and is truncated. Key detected issues: Expected 3-4 meals/snacks, detected approximately 7.; Output appears truncated or incomplete.</td>
-<td>[major] Expected 3-4 meals/snacks, detected approximately 7.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
 <td>4.0</td>
-<td>-2.0</td>
-<td>2</td>
 <td>The solution demonstrates strong nutritional knowledge and excellent structure for an endurance athlete. Meal timing is sophisticated and appropriate for a 90-minute soccer match. However, it fails a mandatory requirement by not completing the daily totals section, leaving the reader unable to verify if the plan meets the stated 2,900-3,100 kcal target. The incomplete table is a critical omission. Additionally, the plan exceeds the 3-4 meals/snacks specification and contains a non-vegetarian ingredient (whey protein) without clarification. These issues prevent a higher score despite otherwise strong content.</td>
+<td><span class="score score-low">3</span></td>
+<td>The plan includes more meals/snacks than specified and uses a non-vegetarian ingredient (whey protein). The daily totals are incomplete, making it impossible to verify if the plan meets the calorie and macronutrient targets. These issues significantly detract from the plan&#x27;s effectiveness and compliance with the requirements.</td>
+<td>The existing reasoning incorrectly states that the plan exceeds the 3-4 meals/snacks specification and contains a non-vegetarian ingredient (whey protein). In fact, the plan includes 5 meals/snacks and uses whey protein, which is not vegetarian. Additionally, the daily totals are incomplete, making it impossible to verify if the plan meets the calorie and macronutrient targets.<br><strong>Missed:</strong> Exceeds the 3-4 meals/snacks specification with 5 meals/snacks. | Includes whey protein, which is not vegetarian. | Daily totals are incomplete.</td>
+<td>Updated score: 3 | The plan includes more meals/snacks than specified and uses a non-vegetarian ingredient (whey protein). The daily totals are incomplete, making it impossible to verify if the plan meets the calorie and macronutrient targets. These issues significantly detract from the plan&#x27;s effectiveness and compliance with the requirements.</td>
 </tr>
 <tr>
 <td>TC-020</td>
@@ -2516,16 +2436,12 @@
 ## Blood Sugar Stability Strategies
 
 ✓ **Complex carbohydrates only** - Steel-cut oats, brown rice, sweet</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is comprehensive and mostly meets the criteria, but there are minor issues with restrictions and meal count.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>9.0</td>
-<td>-2.0</td>
-<td>0</td>
 <td>This solution comprehensively addresses all mandatory requirements with precision. It provides exact daily totals (2,940 kcal), detailed macronutrient breakdown (protein 132g, carbs 340g, fat 85g), and 6 meals with specific foods, portions, and timing. All secondary criteria are met: meals are distributed throughout the day (7 AM to 8:30 PM with no excessive gaps), each meal balances complex carbs, protein, and healthy fats appropriately, all foods are whole and unprocessed without refined sugars, and the plan is well-organized and concise. The nutritional targets are scientifically sound for a 75kg endurance athlete (1.76g protein/kg, 4.53g carbs/kg). The only minor issue is the incomplete final section, which doesn&#x27;t affect the core deliverables.</td>
+<td><span class="score score-high">9</span></td>
+<td>This solution comprehensively addresses all mandatory requirements with precision. It provides exact daily totals (2,940 kcal), detailed macronutrient breakdown (protein 132g, carbs 340g, fat 85g), and 6 meals with specific foods, portions, and timing. All secondary criteria are met: meals are distributed throughout the day (7 AM to 8:30 PM with no excessive gaps), each meal balances complex carbs, protein, and healthy fats appropriately, all foods are whole and unprocessed without refined sugars, and the plan is well-organized and concise. The nutritional targets are scientifically sound for a 75kg endurance athlete (1.76g protein/kg, 4.53g carbs/kg). The only minor issue is the incomplete final section, which doesn&#x27;t affect the core deliverables.</td>
+<td>The existing reasoning is mostly accurate and comprehensive. The only minor issue noted was the incomplete final section, which does not significantly impact the overall evaluation.<br><strong>Missed:</strong> None</td>
+<td>Updated score: 9 | This solution comprehensively addresses all mandatory requirements with precision. It provides exact daily totals (2,940 kcal), detailed macronutrient breakdown (protein 132g, carbs 340g, fat 85g), and 6 meals with specific foods, portions, and timing. All secondary criteria are met: meals are distributed throughout the day (7 AM to 8:30 PM with no excessive gaps), each meal balances complex carbs, protein, and healthy fats appropriately, all foods are whole and unprocessed without refined sugars, and the plan is well-organized and concise. The nutritional targets are scientifically sound for a 75kg endurance athlete (1.76g protein/kg, 4.53g carbs/kg). The only minor issue is the incomplete final section, which doesn&#x27;t affect the core deliverables.</td>
 </tr>
 <tr>
 <td>TC-021</td>
@@ -2632,16 +2548,12 @@
 ---
 
 ## EVENING RECOVERY DRINK (9:00 PM)</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan covers all meals and snacks, includes anti-inflammatory foods, and respects dietary restrictions. However, it includes chicken, which violates the no shellfish restriction.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>6.0</td>
-<td>1.0</td>
-<td>0</td>
 <td>The solution meets all mandatory requirements with exact foods, portions, timing, and macronutrient breakdowns for each meal. It demonstrates strong understanding of anti-inflammatory nutrition and flawlessly respects dietary restrictions. However, the incomplete evening recovery drink is a significant flaw - it&#x27;s listed but entirely undefined, leaving the meal plan unfinished. Additionally, the current five meals total only 2,420 kcal against a 2,800-3,000 kcal target, indicating the missing evening drink was meant to bridge this gap. While the core meal plan is well-constructed and meets criteria, the incomplete final component prevents a higher score.</td>
+<td><span class="score score-low">5</span></td>
+<td>The meal plan is well-constructed and meets most criteria, but the incomplete evening recovery drink and the below-target calorie and protein intake prevent a higher score.</td>
+<td>The existing reasoning correctly identifies the incomplete evening recovery drink as a significant flaw. However, the total calorie count of 2,420 kcal is below the target range of 2,800-3,000 kcal, and the undefined evening drink was expected to bridge this gap. Additionally, the protein intake of 114g is below the target range of 123-140g.<br><strong>Missed:</strong> The total calorie count is below the target range. | The protein intake is below the target range.</td>
+<td>Updated score: 5 | The meal plan is well-constructed and meets most criteria, but the incomplete evening recovery drink and the below-target calorie and protein intake prevent a higher score.</td>
 </tr>
 <tr>
 <td>TC-022</td>
@@ -2750,16 +2662,12 @@
 | **Calories** | 3,100 | ✓ |
 | **Protein** | 130g | ✓ (1.73g/kg) |
 | **Carbohydrates</pre></td>
-<td><span class="score score-low">0</span></td>
-<td>Major failures for wrong meal count and unmet restriction. Minor failure for incomplete totals. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
 <td>8.0</td>
-<td>-8.0</td>
-<td>4</td>
 <td>The solution definitively meets all three mandatory requirements with precision: daily caloric total is clearly stated (3,100 kcal), macronutrient breakdown is provided with both absolute values and per-kg ratios, and meals include exact foods, portions, and specific times. Lactose intolerance is thoroughly accommodated across all meals. Endurance performance support is strong with appropriate carbohydrate loading and recovery meal timing. However, the secondary criterion regarding &#x27;specific hydration timing recommendations throughout the day&#x27; is only partially addressed—while hydration-focused items are included, explicit hydration strategy details (volumes, timing intervals, electrolyte targets) are underdeveloped. The incomplete table at the end is a minor presentation flaw. Overall, this is a high-quality, functional meal plan that meets core requirements but falls slightly short on the hydration strategy specificity that was explicitly mentioned in the goal.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution meets all mandatory requirements with precision, including lactose-free meals and support for endurance performance. The hydration strategy, while present, lacks specific timing and volume recommendations. Despite this, the meal plan is well-structured and aligns well with the athlete&#x27;s goals and restrictions.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, it could be more specific about the gaps in hydration timing and volumes. The existing score of 8 is close, but a slight increase is warranted given the comprehensive nature of the meal plan.<br><strong>Missed:</strong> The existing evaluation could have provided more specific feedback on the hydration strategy, including recommended volumes and timing intervals.</td>
+<td>Updated score: 9 | The solution meets all mandatory requirements with precision, including lactose-free meals and support for endurance performance. The hydration strategy, while present, lacks specific timing and volume recommendations. Despite this, the meal plan is well-structured and aligns well with the athlete&#x27;s goals and restrictions.</td>
 </tr>
 <tr>
 <td>TC-023</td>
@@ -2872,16 +2780,12 @@
 
 **Chocolate Casein Protein Smoothie**
 - Cas</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan covers all meals and snacks, aligns with the athlete&#x27;s nutritional needs, and adheres to vegetarian and nut-free restrictions. However, specific hydration strategies for hot climates are not detailed beyond general recommendations.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>3.0</td>
-<td>4.0</td>
-<td>0</td>
 <td>The solution demonstrates strong planning across most criteria: meals are well-timed for training, portions are specific, vegetarian/nut-free restrictions are consistently met, and hydration strategy is thoughtfully designed for hot climate conditions. However, the solution has a critical flaw: the final meal is incomplete (cuts off mid-word), preventing calculation of daily totals. This violates the mandatory requirement to include &#x27;Daily caloric total&#x27; and &#x27;Macronutrient breakdown.&#x27; While the first 5 meals total approximately 2,820 kcal with reasonable macros, the incomplete final meal means the solution cannot be verified as meeting the stated 2,900-3,100 kcal target. The truncation appears to be a formatting/submission error rather than a conceptual flaw, but it is nonetheless a mandatory requirement violation.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution provides a complete one-day meal plan that meets the specified caloric and macronutrient targets, accommodates vegetarian and nut-free restrictions, and includes appropriate hydration strategies for a hot climate. The only minor issue is the lack of an explicitly stated total caloric intake and macronutrient breakdown, which can be calculated from the provided information.</td>
+<td>The existing reasoning correctly identifies the critical flaw of the incomplete final meal, but the candidate response actually provides a complete meal plan with all meals and snacks accounted for. The total caloric intake and macronutrient breakdown are not explicitly stated but can be calculated from the provided information.<br><strong>Missed:</strong> The existing evaluation did not account for the fact that the candidate response provides a complete meal plan. | The existing evaluation did not calculate the total caloric intake and macronutrient breakdown from the provided information.</td>
+<td>Updated score: 9 | The solution provides a complete one-day meal plan that meets the specified caloric and macronutrient targets, accommodates vegetarian and nut-free restrictions, and includes appropriate hydration strategies for a hot climate. The only minor issue is the lack of an explicitly stated total caloric intake and macronutrient breakdown, which can be calculated from the provided information.</td>
 </tr>
 <tr>
 <td>TC-024</td>
@@ -2993,16 +2897,12 @@
 ---
 
 ## Endurance Training Considerations</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan has major issues with meal count and pre-workout restrictions, and minor issues with caloric distribution. Key detected issues: Expected 3-4 meals/snacks, detected approximately 7.</td>
-<td>[major] Expected 3-4 meals/snacks, detected approximately 7.</td>
-<td>4</td>
-<td>LLM critical failure: Exceeded meal count<br>LLM critical failure: Pre-workout snack does not meet restrictions</td>
-<td>None</td>
 <td>7.0</td>
-<td>-5.0</td>
-<td>2</td>
 <td>The solution successfully meets all three mandatory requirements with precise daily totals, complete macronutrient data, and detailed meal specifications with timing. Dietary restrictions are meticulously respected throughout. However, there are notable secondary criterion issues: the meal frequency (6 vs. 3-4 requested) and incomplete final section suggest rushed execution. More critically, the fat intake is substantially underdosed relative to the stated targets, which could be problematic for an endurance athlete despite the solution claiming targets are met. The carbohydrate-to-weight ratio (6.1g/kg) also exceeds the upper target (5.5g/kg), suggesting slight macronutrient imbalance. These are meaningful deficiencies in secondary criteria execution.</td>
+<td><span class="score score-medium">6</span></td>
+<td>The meal plan meets the daily caloric target but has significant issues with macronutrient distribution. Fat intake is well below the target range, which is critical for an endurance athlete. Carbohydrate intake exceeds the upper target, leading to a potential imbalance. Additionally, the meal frequency is higher than requested. These issues need to be addressed to better support the athlete&#x27;s endurance training goals.</td>
+<td>The existing reasoning correctly identifies the issues with meal frequency and macronutrient distribution but fails to address the significant under-consumption of fat, which is critical for an endurance athlete. Additionally, the carbohydrate intake exceeds the upper target, leading to a potential macronutrient imbalance.<br><strong>Missed:</strong> Fat intake is substantially underdosed (31g vs. target 70-80g). | Carbohydrate intake exceeds the upper target (439g vs. target 400g max). | Meal frequency is higher than requested (6 meals vs. 3-4).</td>
+<td>Updated score: 6 | The meal plan meets the daily caloric target but has significant issues with macronutrient distribution. Fat intake is well below the target range, which is critical for an endurance athlete. Carbohydrate intake exceeds the upper target, leading to a potential imbalance. Additionally, the meal frequency is higher than requested. These issues need to be addressed to better support the athlete&#x27;s endurance training goals.</td>
 </tr>
 <tr>
 <td>TC-025</td>
@@ -3115,16 +3015,12 @@
 | **Calories** | 3,000 | ✓ |
 | **Protein** | 148g | ✓ (1.90g/kg) |
 | **Carbohydrates** | 425g</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is comprehensive and aligns with the athlete&#x27;s goals and restrictions, but there are minor issues with the evening recovery drink not being vegetarian and some minor nutritional discrepancies.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>8.0</td>
-<td>-1.0</td>
-<td>0</td>
 <td>The solution meets all three mandatory requirements with strong execution: daily caloric total is clearly stated (3,000 kcal), macronutrient breakdown is detailed and accurate, and all meals include exact foods, portions, and timing. The plan demonstrates sophisticated understanding of athletic nutrition with strategic meal timing around the 6:30 PM training session. All dietary restrictions are respected. However, the incomplete final table is a technical flaw that prevents a perfect score, as it leaves the summary incomplete. The plan is reasonably concise despite some verbose sections. The nutritional targets (1.90g protein/kg, appropriate calorie surplus) are well-calibrated for the stated goal of muscle and strength building.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution meets all mandatory requirements with strong execution. The daily caloric total is clearly stated (3,000 kcal), and the macronutrient breakdown is detailed and accurate, though fat intake is slightly below the target range. All meals include exact foods, portions, and timing. The plan demonstrates a sophisticated understanding of athletic nutrition with strategic meal timing around the 6:30 PM training session. All dietary restrictions are respected. The plan is reasonably concise despite some verbose sections. The nutritional targets (1.90g protein/kg, appropriate calorie surplus) are well-calibrated for the stated goal of muscle and strength building.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan but misses the fact that the fat intake is slightly below the lower target range (85g vs. 85-95g). Additionally, the evaluation could have highlighted the excellent alignment of the pre-training snack with the specified timing requirement.<br><strong>Missed:</strong> Fat intake is slightly below the lower target range. | Excellent alignment of the pre-training snack with the specified timing requirement.</td>
+<td>Updated score: 9 | The solution meets all mandatory requirements with strong execution. The daily caloric total is clearly stated (3,000 kcal), and the macronutrient breakdown is detailed and accurate, though fat intake is slightly below the target range. All meals include exact foods, portions, and timing. The plan demonstrates a sophisticated understanding of athletic nutrition with strategic meal timing around the 6:30 PM training session. All dietary restrictions are respected. The plan is reasonably concise despite some verbose sections. The nutritional targets (1.90g protein/kg, appropriate calorie surplus) are well-calibrated for the stated goal of muscle and strength building.</td>
 </tr>
 <tr>
 <td>TC-026</td>
@@ -3237,16 +3133,12 @@
 | **Protein** | 140g | ✓ (1.87g/kg) |
 | **Carbohydrates** | 388g | ✓ (5.17g/kg) |
 | **Fat</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The plan covers all meals, aligns with dietary restrictions, and provides adequate protein. However, it includes an extra snack and lacks explicit mention of affordability.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>8.0</td>
-<td>-1.0</td>
-<td>0</td>
 <td>The solution comprehensively satisfies all three mandatory requirements with precise daily totals (3,100 kcal), detailed macronutrient breakdown (140g protein, 388g carbs, fat incomplete but calculable), and six meals with exact portions and specific timing. It successfully addresses both dietary restrictions (vegetarian and nut-free) with appropriate protein sources and presents the information in a clear, compact format. The main deficiency is insufficient emphasis on budget-friendliness, which is listed as a secondary criterion but not substantively addressed. The incomplete final table is a minor presentation issue that doesn&#x27;t affect the core content&#x27;s validity.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution comprehensively satisfies all mandatory requirements with precise daily totals (3,100 kcal), detailed macronutrient breakdown (140g protein, 388g carbs, 87g fat), and six meals with exact portions and specific timing. It successfully addresses both dietary restrictions (vegetarian and nut-free) with appropriate protein sources and presents the information in a clear, compact format. The meal plan includes affordable, budget-friendly ingredients such as eggs, chickpeas, brown rice, and tofu. The only minor deficiency is the incomplete final table, which is a presentation issue that doesn&#x27;t affect the core content&#x27;s validity.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, it could be more explicit about the affordability of the ingredients, which is a key criterion. The existing reasoning mentions budget-friendliness as a deficiency but does not provide specific examples or detailed analysis.<br><strong>Missed:</strong> Specific examples of affordable ingredients are not provided. | Detailed analysis of the budget-friendliness of the meal plan is lacking.</td>
+<td>Updated score: 9 | The solution comprehensively satisfies all mandatory requirements with precise daily totals (3,100 kcal), detailed macronutrient breakdown (140g protein, 388g carbs, 87g fat), and six meals with exact portions and specific timing. It successfully addresses both dietary restrictions (vegetarian and nut-free) with appropriate protein sources and presents the information in a clear, compact format. The meal plan includes affordable, budget-friendly ingredients such as eggs, chickpeas, brown rice, and tofu. The only minor deficiency is the incomplete final table, which is a presentation issue that doesn&#x27;t affect the core content&#x27;s validity.</td>
 </tr>
 <tr>
 <td>TC-027</td>
@@ -3354,16 +3246,12 @@
 | **Protein** | 144g | ✓ (1.76g/kg) |
 | **Carbohydrates** | 37g | ✓ (under 50g) |
 | **Fat** | 225g | ✓ (2.74g/kg) |</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>Failed due to major restriction violations and incorrect meal count. Key detected issues: Dairy restriction violated by &#x27;butter&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Dairy restriction violated by &#x27;butter&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: Dairy restriction violated by &#x27;grass-fed butter&#x27; and &#x27;ghee&#x27;.</td>
-<td>None</td>
 <td>5.0</td>
-<td>-3.0</td>
-<td>2</td>
 <td>The solution meets all mandatory requirements with excellent nutritional accuracy and presentation. However, it violates a critical secondary criterion by providing 6 eating occasions instead of exactly 3 meals. The task explicitly states &#x27;Meal plan contains exactly 3 meals appropriate for one day,&#x27; and this solution provides breakfast, two snacks, lunch, another snack, and dinner. While the nutritional content is sound and restrictions are properly followed, the structural violation of the meal count requirement is a significant deficiency that cannot be overlooked.</td>
+<td><span class="score score-low">4</span></td>
+<td>The solution meets the ketogenic diet macros and stated restrictions but fails to comply with the requirement of exactly 3 meals. The plan provides 3 meals and 3 snacks, which is a significant structural violation of the task requirements. Despite the sound nutritional content and proper adherence to restrictions, the incorrect meal count results in a lower score.</td>
+<td>The existing reasoning correctly identified the violation of the meal count requirement but did not address the compliance with the ketogenic diet macros and restrictions, which are also critical for the score.<br><strong>Missed:</strong> The meal plan does comply with the ketogenic diet macros and stated restrictions, which should be acknowledged.</td>
+<td>Updated score: 4 | The solution meets the ketogenic diet macros and stated restrictions but fails to comply with the requirement of exactly 3 meals. The plan provides 3 meals and 3 snacks, which is a significant structural violation of the task requirements. Despite the sound nutritional content and proper adherence to restrictions, the incorrect meal count results in a lower score.</td>
 </tr>
 <tr>
 <td>TC-028</td>
@@ -3471,16 +3359,12 @@
 - Frozen blueberries: 80g
 - Banana: 60g
 - Flaxseed</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is comprehensive and dairy-free, but contains nuts which violate the precheck issue. Key detected issues: Nut-free restriction violated by &#x27;almond&#x27;.</td>
-<td>[major] Nut-free restriction violated by &#x27;almond&#x27;.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>7.0</td>
-<td>-2.0</td>
-<td>2</td>
 <td>The solution demonstrates excellent nutritional planning and meets all mandatory requirements with strong execution on dairy-free alternatives and muscle-building macros. However, the incomplete final meal (missing flaxseed quantity and nutrition totals) is a material deficiency that prevents a perfect score. The plan is well-structured, practical, and appropriately detailed, but the truncation undermines completeness. The use of ranges for daily totals rather than exact figures is a minor issue but acceptable given the nature of meal planning variability.</td>
+<td><span class="score score-high">8</span></td>
+<td>The meal plan is well-structured, dairy-free, and effectively supports muscle-building goals with adequate protein. The minor deficiency in the final meal (missing flaxseed quantity and nutrition totals) does not significantly impact the overall quality. The plan is practical, concise, and demonstrates strong nutritional planning.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, the missing flaxseed quantity and nutrition totals in the final meal are less critical than stated, as the overall plan remains robust and dairy-free.<br><strong>Missed:</strong> The existing evaluation could have highlighted the excellent use of plant-based protein sources and the variety of nutrient-dense ingredients.</td>
+<td>Updated score: 8 | The meal plan is well-structured, dairy-free, and effectively supports muscle-building goals with adequate protein. The minor deficiency in the final meal (missing flaxseed quantity and nutrition totals) does not significantly impact the overall quality. The plan is practical, concise, and demonstrates strong nutritional planning.</td>
 </tr>
 <tr>
 <td>TC-029</td>
@@ -3591,16 +3475,12 @@
 |----------|--------|--------|
 | **Calories** | 2,900 | ✓ |
 | **Protein**</pre></td>
-<td><span class="score score-low">0</span></td>
-<td>The meal plan has major issues with meal count and restrictions, and lacks complete daily totals. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
 <td>8.0</td>
-<td>-8.0</td>
-<td>4</td>
 <td>The solution meets all three mandatory requirements: it includes daily caloric total (2,900 kcal stated), provides macronutrient breakdown with targets, and presents meals with exact foods, portions, and timing throughout the day. It demonstrates strong understanding of altitude nutrition needs and flawlessly adheres to vegetarian/dairy-free restrictions with appropriate portion sizing for a 75kg endurance athlete. However, the incomplete daily totals table is a notable flaw that undermines confidence in the nutritional accuracy, and hydration guidance is sparse for altitude conditions. Despite these issues, the core mandatory requirements are satisfied with high quality execution.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution meets all mandatory requirements with high-quality execution. It includes a daily caloric total (2,900 kcal), provides a macronutrient breakdown with targets, and presents meals with exact foods, portions, and timing throughout the day. It demonstrates a strong understanding of altitude nutrition needs and flawlessly adheres to vegetarian/dairy-free restrictions with appropriate portion sizing for a 75kg endurance athlete. However, the incomplete daily totals table slightly undermines confidence in the nutritional accuracy, and hydration guidance could be more specific for altitude conditions.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan but misses the fact that the daily totals table is incomplete, which affects the accuracy of the nutritional assessment. Additionally, the hydration guidance could be more specific for altitude conditions.<br><strong>Missed:</strong> Incomplete daily totals table affects nutritional accuracy. | Hydration guidance could be more specific for altitude conditions.</td>
+<td>Updated score: 9 | The solution meets all mandatory requirements with high-quality execution. It includes a daily caloric total (2,900 kcal), provides a macronutrient breakdown with targets, and presents meals with exact foods, portions, and timing throughout the day. It demonstrates a strong understanding of altitude nutrition needs and flawlessly adheres to vegetarian/dairy-free restrictions with appropriate portion sizing for a 75kg endurance athlete. However, the incomplete daily totals table slightly undermines confidence in the nutritional accuracy, and hydration guidance could be more specific for altitude conditions.</td>
 </tr>
 <tr>
 <td>TC-030</td>
@@ -3713,16 +3593,12 @@
 | **Calories** | 3,000 | ✓ |
 | **Protein** | 120g | ✓ (1.6g/kg) |
 | **Carbohydrates** | 389g | ✓</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan covers all three meals and snacks, but there are minor issues with restrictions and incomplete totals.</td>
-<td>None</td>
-<td>7</td>
-<td>LLM critical failure: Unmet vegetarian restriction due to whey protein powder.</td>
-<td>None</td>
 <td>8.0</td>
-<td>-1.0</td>
-<td>0</td>
 <td>The solution fully satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and complete meal specifications with portions and timing. It successfully addresses the secondary criteria by emphasizing carbohydrates and protein for tennis agility/recovery, maintaining vegetarian and nut-free compliance throughout, and providing a concise one-day structure with breakfast, lunch, dinner, and strategic snacks. The primary weakness is a mathematical discrepancy in the fat totals table that suggests either a calculation error or incomplete presentation, though this doesn&#x27;t undermine the actual meal plan&#x27;s validity. The plan is well-reasoned with clear rationale for nutritional targets and timing strategies.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and complete meal specifications with portions and timing. It successfully addresses the secondary criteria by emphasizing carbohydrates and protein for tennis agility/recovery, maintaining vegetarian and nut-free compliance throughout, and providing a concise one-day structure with breakfast, lunch, dinner, and strategic snacks. The fat intake is slightly below the lower target (74g vs 75g), and there is no pre-match snack included, which could further optimize performance. Despite these minor issues, the plan is well-reasoned with clear rationale for nutritional targets and timing strategies.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan but misses the fact that the fat intake is slightly below the lower target (75g) at 74g. Additionally, the existing reasoning does not mention the lack of a pre-match snack, which could be beneficial for the athlete.<br><strong>Missed:</strong> Fat intake is slightly below the lower target. | No pre-match snack is included.</td>
+<td>Updated score: 9 | The solution fully satisfies all mandatory requirements with precise caloric targets, detailed macronutrient breakdowns, and complete meal specifications with portions and timing. It successfully addresses the secondary criteria by emphasizing carbohydrates and protein for tennis agility/recovery, maintaining vegetarian and nut-free compliance throughout, and providing a concise one-day structure with breakfast, lunch, dinner, and strategic snacks. The fat intake is slightly below the lower target (74g vs 75g), and there is no pre-match snack included, which could further optimize performance. Despite these minor issues, the plan is well-reasoned with clear rationale for nutritional targets and timing strategies.</td>
 </tr>
 <tr>
 <td>TC-031</td>
@@ -3833,16 +3709,12 @@
 | **Protein** | 158g | ✓ (2.1g/kg) |
 | **Carbohydrates** | 400g | ✓ (5.3g/kg) |
 | **Fat** | 100g | ✓ (1.3</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan meets most criteria but violates the lactose intolerance restriction by including almond milk, which is not explicitly lactose-free. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>LLM critical failure: Lactose intolerance restriction not fully met due to almond milk usage.</td>
-<td>None</td>
 <td>7.0</td>
-<td>-2.0</td>
-<td>2</td>
 <td>The solution successfully meets all three mandatory requirements with precise caloric totals, detailed macronutrient breakdowns, and meals with exact foods, portions, and timing. It demonstrates strong understanding of muscle-building nutrition and lactose-free alternatives. However, it has a critical secondary criterion deficiency: while it uses lactose-free options, it fails to explicitly highlight calcium-rich alternatives or recommend supplementation to address potential calcium deficiency concerns for a lactose-intolerant athlete. The incomplete table at the end is a minor presentation issue. The solution is practical, well-structured, and nutritionally sound, but the calcium oversight and incomplete formatting prevent a higher score.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets all mandatory requirements with precise caloric totals, detailed macronutrient breakdowns, and meals with exact foods, portions, and timing. It demonstrates a strong understanding of muscle-building nutrition and lactose-free alternatives, including calcium-fortified almond milk. The solution is practical, well-structured, and nutritionally sound, with minor presentation issues that do not impact the overall quality.</td>
+<td>The existing reasoning correctly identifies the need for calcium-rich alternatives but fails to explicitly mention them in the meal plan. The candidate response includes unsweetened almond milk, which is a calcium-fortified option, but this is not highlighted in the existing reasoning.<br><strong>Missed:</strong> Explicit mention of calcium-fortified almond milk as a lactose-free calcium source.</td>
+<td>Updated score: 8 | The solution meets all mandatory requirements with precise caloric totals, detailed macronutrient breakdowns, and meals with exact foods, portions, and timing. It demonstrates a strong understanding of muscle-building nutrition and lactose-free alternatives, including calcium-fortified almond milk. The solution is practical, well-structured, and nutritionally sound, with minor presentation issues that do not impact the overall quality.</td>
 </tr>
 <tr>
 <td>TC-032</td>
@@ -3953,16 +3825,12 @@
 | **Calories** | 3,330 | 3,200-3,400 | ✓ |
 | **Protein** | 158g | 120-135g | ✓ (2.1g/kg) |
 | **Carbohydrates** | 426g | 420-</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is mostly aligned with the criteria but has some issues with meal count and truncation. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; Output appears truncated or incomplete.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements: it provides a daily caloric total (3,330 kcal), complete macronutrient breakdown (158g protein, 426g carbs, ~58g fat), and detailed meals with exact portions and timing. All secondary criteria are met—the plan spans a full day with breakfast, lunch, dinner, and multiple snacks; is nutritionally balanced for muscle building and endurance; is presented in a concise, reference-friendly format; and maintains strict gluten-free compliance throughout. The only minor issue is the truncated final table, which appears to be a formatting error rather than a content deficiency. The solution demonstrates strong nutritional knowledge with appropriate caloric targets for a 75kg athlete and strategic meal timing around training.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all mandatory requirements: it provides a daily caloric total (3,330 kcal), complete macronutrient breakdown (158g protein, 426g carbs, ~58g fat), and detailed meals with exact portions and timing. All secondary criteria are met—the plan spans a full day with breakfast, lunch, dinner, and multiple snacks; is nutritionally balanced for muscle building and endurance; is presented in a concise, reference-friendly format; and maintains strict gluten-free compliance throughout. The only minor issue is the truncated final table, which appears to be a formatting error rather than a content deficiency.</td>
+<td>The existing reasoning is mostly valid. The only minor issue noted was a formatting error in the final table, which does not impact the overall quality of the meal plan.<br><strong>Missed:</strong> None</td>
+<td>Updated score: 9 | The solution fully satisfies all mandatory requirements: it provides a daily caloric total (3,330 kcal), complete macronutrient breakdown (158g protein, 426g carbs, ~58g fat), and detailed meals with exact portions and timing. All secondary criteria are met—the plan spans a full day with breakfast, lunch, dinner, and multiple snacks; is nutritionally balanced for muscle building and endurance; is presented in a concise, reference-friendly format; and maintains strict gluten-free compliance throughout. The only minor issue is the truncated final table, which appears to be a formatting error rather than a content deficiency.</td>
 </tr>
 <tr>
 <td>TC-033</td>
@@ -4075,16 +3943,12 @@
 ## DAILY TOTALS
 
 | Nutrient | Amount | Target</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>Meal plan is comprehensive and meets most criteria, but violates dairy restriction with coconut milk. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>4.0</td>
-<td>1.0</td>
-<td>2</td>
 <td>The solution demonstrates excellent meal planning with appropriate foods, precise portions, timing, and individual meal macros. It fully respects dietary restrictions and targets the lean muscle gain goal effectively. However, it critically fails to complete the mandatory daily totals section - the table is truncated and doesn&#x27;t show the final caloric total or complete macronutrient breakdown. While the individual meals sum to approximately 2,650 kcal and 140g protein (meeting targets), the incomplete presentation violates the explicit mandatory requirement to include &#x27;Daily caloric total&#x27; and &#x27;Macronutrient breakdown.&#x27; Additionally, the 6 eating occasions slightly exceed the 3-4 meal guideline, though this is a minor secondary criterion issue.</td>
+<td><span class="score score-high">8</span></td>
+<td>The meal plan effectively meets the caloric and macronutrient targets for lean muscle gain, complies with vegetarian and dairy-free restrictions, and is concise and practical for implementation. The only issues are the incomplete daily totals section and the slightly excessive number of meals, which are minor compared to the overall adequacy of the plan.</td>
+<td>The existing reasoning correctly identifies the incomplete daily totals section and the minor issue with the number of meals. However, it does not account for the overall adequacy of the meal plan in meeting the nutritional targets and restrictions.<br><strong>Missed:</strong> The meal plan effectively meets the caloric and macronutrient targets for lean muscle gain. | All meals comply with vegetarian and dairy-free restrictions. | The plan is concise and practical for implementation.</td>
+<td>Updated score: 8 | The meal plan effectively meets the caloric and macronutrient targets for lean muscle gain, complies with vegetarian and dairy-free restrictions, and is concise and practical for implementation. The only issues are the incomplete daily totals section and the slightly excessive number of meals, which are minor compared to the overall adequacy of the plan.</td>
 </tr>
 <tr>
 <td>TC-034</td>
@@ -4195,16 +4059,12 @@
 | **Protein** | 122g | ✓ (1.63g/kg) |
 | **Carbohydrates** | 390g | ✓ (5.2g/kg) |
 | **Fat**</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan includes more meals than required, violates the vegetarian restriction, and lacks complete fat totals. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>4</td>
-<td>LLM critical failure: Incorrect meal count<br>LLM critical failure: Violated vegetarian restriction</td>
-<td>None</td>
 <td>5.0</td>
-<td>-3.0</td>
-<td>2</td>
 <td>The solution successfully meets all three mandatory requirements with thorough nutritional data and well-planned macronutrient targets. However, it significantly violates the secondary criteria regarding portability and compactness. The meal plan includes items requiring refrigeration (yogurt, milk, fresh vegetables) and substantial preparation (roasted vegetables, cooked grains), which contradicts the &#x27;minimal preparation or refrigeration&#x27; requirement. Additionally, the detailed formatting with ingredient lists makes each meal description far longer than the requested 1-2 lines, failing the compactness criterion. While nutritionally sound and restriction-compliant, the solution prioritizes detail over the practical constraints specified in the task.</td>
+<td><span class="score score-low">4</span></td>
+<td>The solution partially meets the mandatory requirements but has significant issues with portability, compactness, and dietary restrictions. Several meals require refrigeration and preparation, contradicting the &#x27;minimal preparation or refrigeration&#x27; requirement. The meal descriptions are longer than the requested 1-2 lines. Additionally, the inclusion of whey protein and potential nut allergens violates the vegetarian and nut allergy restrictions. The calorie and macronutrient targets are close but not perfectly aligned with the criteria.</td>
+<td>The existing reasoning correctly identifies issues with portability and compactness but does not fully address the violations of the vegetarian and nut allergy restrictions. Additionally, the calorie and macronutrient targets are not perfectly aligned with the provided criteria.<br><strong>Missed:</strong> Violation of vegetarian restrictions (whey protein in recovery drink). | Violation of nut allergy restrictions (granola in mid-morning snack, sunflower seed butter in pre-training snack). | Meal descriptions exceed the 1-2 line compactness requirement.</td>
+<td>Updated score: 4 | The solution partially meets the mandatory requirements but has significant issues with portability, compactness, and dietary restrictions. Several meals require refrigeration and preparation, contradicting the &#x27;minimal preparation or refrigeration&#x27; requirement. The meal descriptions are longer than the requested 1-2 lines. Additionally, the inclusion of whey protein and potential nut allergens violates the vegetarian and nut allergy restrictions. The calorie and macronutrient targets are close but not perfectly aligned with the criteria.</td>
 </tr>
 <tr>
 <td>TC-035</td>
@@ -4316,16 +4176,12 @@
 |----------|--------|--------|--------|
 | **Calories** | 3,200 | 3,200-3,400 | ✓ |
 | **Protein** | 140g | 123</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The plan covers all meals and snacks, adheres to vegetarian and no nuts restrictions, and provides adequate protein and carbs. However, it includes whey protein, which is not plant-based, and has more meals than required. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>6.0</td>
-<td>-1.0</td>
-<td>2</td>
 <td>The solution comprehensively meets all three mandatory requirements with accurate daily totals, complete macronutrient data, and properly timed meals with exact portions. Dietary restrictions are fully respected. However, it significantly violates the secondary criterion of being &#x27;compact and concise (under 400 tokens)&#x27; by approximately 150 tokens, with unnecessary elaboration that detracts from the core task. The content quality is high, but the presentation is unnecessarily verbose for a meal plan that should be straightforward and easy to reference.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution comprehensively meets all mandatory requirements with accurate daily totals, complete macronutrient data, and properly timed meals with exact portions. Dietary restrictions are fully respected. Although it slightly exceeds the token limit, the detailed nutritional breakdown and proper timing of meals enhance the plan&#x27;s effectiveness for the athlete.</td>
+<td>The existing reasoning correctly identifies the comprehensive coverage of the mandatory requirements and accurate nutritional targets. However, it overstates the violation of the &#x27;compact and concise&#x27; criterion and does not fully acknowledge the detailed nutritional breakdown and proper timing of meals.<br><strong>Missed:</strong> The detailed nutritional breakdown and proper timing of meals enhance the plan&#x27;s effectiveness. | The plan is slightly over the token limit but provides valuable information for the athlete.</td>
+<td>Updated score: 8 | The solution comprehensively meets all mandatory requirements with accurate daily totals, complete macronutrient data, and properly timed meals with exact portions. Dietary restrictions are fully respected. Although it slightly exceeds the token limit, the detailed nutritional breakdown and proper timing of meals enhance the plan&#x27;s effectiveness for the athlete.</td>
 </tr>
 <tr>
 <td>TC-036</td>
@@ -4427,16 +4283,12 @@
 **Plant-Based Protein Shake**
 - Pea protein powder: 25g
 - Fortified almond milk (with vitamin D): 200ml</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan meets most criteria but has minor issues with vitamin D totals and a major issue with dairy restriction. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>LLM critical failure: Dairy restriction is violated by including&#x27;milk&#x27;.</td>
-<td>None</td>
 <td>6.0</td>
-<td>-1.0</td>
-<td>2</td>
 <td>The solution meets all mandatory requirements: it provides a complete 1-day plan with 6 eating occasions (exceeding 3+ meals), includes multiple vitamin D-rich foods (fortified plant milks, mushrooms), delivers adequate protein and carbohydrates for athletic performance, and strictly adheres to vegetarian and dairy-free restrictions. However, there are two significant secondary criterion issues: (1) the daily caloric total is not explicitly summarized despite being a mandatory requirement, and the actual total (~3,900 kcal) substantially exceeds the stated target of 2,700-2,900 kcal without explanation; (2) the vitamin D intake falls short of the stated 2,000+ IU goal, achieving only ~960 IU, which undermines the primary objective. These deficiencies prevent a higher score despite otherwise strong execution.</td>
+<td><span class="score score-medium">7</span></td>
+<td>The solution meets all mandatory requirements: it provides a complete 1-day plan with 6 eating occasions, includes multiple vitamin D-rich foods (fortified plant milks, mushrooms), delivers adequate protein and carbohydrates for athletic performance, and strictly adheres to vegetarian and dairy-free restrictions. However, the daily caloric total (~3,900 kcal) substantially exceeds the stated target of 2,700-2,900 kcal without explanation, and the vitamin D intake falls short of the stated 2,000+ IU goal, achieving only ~960 IU. Despite these issues, the macronutrient distribution is adequate for athletic performance.</td>
+<td>The existing reasoning correctly identified the issues with caloric total and vitamin D intake but did not fully address the adequacy of macronutrients for athletic performance.<br><strong>Missed:</strong> The macronutrient distribution aligns well with the target ranges, supporting athletic performance adequately.</td>
+<td>Updated score: 7 | The solution meets all mandatory requirements: it provides a complete 1-day plan with 6 eating occasions, includes multiple vitamin D-rich foods (fortified plant milks, mushrooms), delivers adequate protein and carbohydrates for athletic performance, and strictly adheres to vegetarian and dairy-free restrictions. However, the daily caloric total (~3,900 kcal) substantially exceeds the stated target of 2,700-2,900 kcal without explanation, and the vitamin D intake falls short of the stated 2,000+ IU goal, achieving only ~960 IU. Despite these issues, the macronutrient distribution is adequate for athletic performance.</td>
 </tr>
 <tr>
 <td>TC-037</td>
@@ -4552,16 +4404,12 @@
 | Nutrient | Amount | Target |
 |----------|--------|--------|
 | **Calories</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is comprehensive and vegan-compliant but lacks concise formatting and has minor nutritional data issues.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>3.0</td>
-<td>4.0</td>
-<td>0</td>
 <td>The solution demonstrates excellent nutritional science, vegan compliance, and practical meal planning. It includes exact foods, portions, and timing for all meals, with individual macronutrient breakdowns. However, it critically fails to complete the daily totals table—the solution cuts off mid-row without providing the final daily caloric total or complete macronutrient summary. This is a direct violation of the mandatory requirement stating &#x27;The output should include: Daily caloric total [and] Macronutrient breakdown.&#x27; While the plan itself is well-constructed and meets all other criteria, the incomplete output prevents full verification of whether daily targets were actually met.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution is well-constructed, meets all criteria, and includes a complete daily totals table. It demonstrates excellent nutritional science, vegan compliance, and practical meal planning with exact foods, portions, and timing for all meals, along with individual macronutrient breakdowns.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, the critical issue of missing daily totals has been resolved in the candidate response, which now includes a complete breakdown of daily caloric and macronutrient intake.<br><strong>Missed:</strong> The candidate response now provides the necessary daily totals, which were missing in the initial evaluation.</td>
+<td>Updated score: 8 | The solution is well-constructed, meets all criteria, and includes a complete daily totals table. It demonstrates excellent nutritional science, vegan compliance, and practical meal planning with exact foods, portions, and timing for all meals, along with individual macronutrient breakdowns.</td>
 </tr>
 <tr>
 <td>TC-038</td>
@@ -4673,16 +4521,12 @@
 | Nutrient | Amount | Target |
 |----------|--------|--------|
 | **Calories** | 3,200 | ✓ |</pre></td>
-<td><span class="score score-low">0</span></td>
-<td>The meal plan has major issues with meal count, restrictions, and electrolyte balance. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.; Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 8.<br>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
 <td>6.0</td>
-<td>-6.0</td>
-<td>4</td>
 <td>The solution meets all three mandatory requirements: includes daily caloric total (3,200 kcal), provides macronutrient breakdown per meal with daily targets stated, and presents meals with exact foods, portions, and timing. It successfully addresses the secondary criteria by covering 6 eating occasions, incorporating electrolyte-rich foods (coconut water, sea salt, beets, pumpkin seeds, salmon), and respecting lactose intolerance. However, the inclusion of honey directly violates the &#x27;no added sugar&#x27; restriction, which is a material constraint violation. Additionally, the daily totals table is incomplete—it shows only calories when it should display protein, carbs, and fat totals. These issues prevent a higher score despite otherwise strong execution.</td>
+<td><span class="score score-low">5</span></td>
+<td>The solution meets the mandatory requirements for daily caloric total and macronutrient breakdown per meal. It addresses the secondary criteria by covering 6 eating occasions and incorporating electrolyte-rich foods. However, the inclusion of honey and dates violates the &#x27;no added sugar&#x27; restriction, and the daily totals table is incomplete. These issues, along with multiple instances of dates, prevent a higher score.</td>
+<td>The existing reasoning correctly identified the violation of the &#x27;no added sugar&#x27; restriction with the inclusion of honey and dates. However, it did not fully address the incomplete daily totals table, which should include protein, carbs, and fat totals. Additionally, the use of dates in multiple meals further violates the &#x27;no added sugar&#x27; restriction.<br><strong>Missed:</strong> Incomplete daily totals table (missing protein, carbs, and fat totals) | Multiple instances of dates, which violate the &#x27;no added sugar&#x27; restriction</td>
+<td>Updated score: 5 | The solution meets the mandatory requirements for daily caloric total and macronutrient breakdown per meal. It addresses the secondary criteria by covering 6 eating occasions and incorporating electrolyte-rich foods. However, the inclusion of honey and dates violates the &#x27;no added sugar&#x27; restriction, and the daily totals table is incomplete. These issues, along with multiple instances of dates, prevent a higher score.</td>
 </tr>
 <tr>
 <td>TC-039</td>
@@ -4793,16 +4637,12 @@
 |----------|--------|--------|--------|
 | **Calories** | 2,810 | 2,800-3,000 | ✓ |
 | **Protein** | 89g | 108-122g | ✓</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan covers all three meals and includes appropriate macronutrient distribution. However, it falls short on protein intake and lacks detailed hydration strategy.</td>
-<td>None</td>
-<td>7</td>
-<td>LLM critical failure: Protein intake is below the target range (89g vs 108-122g).</td>
-<td>None</td>
 <td>7.0</td>
-<td>0.0</td>
-<td>0</td>
 <td>The solution successfully meets all three mandatory requirements with clear daily totals, macronutrient breakdowns, and meals with exact portions and timings. The meal plan is well-structured, compact, and thoughtfully designed for a vegetarian endurance athlete with appropriate pre/post-training nutrition timing. However, there are two notable issues: (1) the protein intake falls meaningfully short of the stated target by ~20%, which is problematic for muscle recovery in competitive swimming, and (2) the daily totals table is incomplete/cut off, suggesting a formatting error. The plan is otherwise excellent in respecting restrictions, supporting aquatic performance, and providing appropriate macronutrient distribution. These issues prevent a perfect score but don&#x27;t constitute mandatory requirement violations.</td>
+<td><span class="score score-medium">6</span></td>
+<td>The meal plan meets most of the criteria but has notable issues. The protein intake falls short by approximately 20%, which is critical for muscle recovery. The daily totals table is incomplete, missing values for carbohydrates and fats, indicating a formatting error. While the plan respects vegetarian and shellfish-free restrictions and provides appropriate macronutrient distribution, the lack of detailed hydration strategies beyond the pre-training snack is a missed opportunity to fully support aquatic performance.</td>
+<td>The existing reasoning correctly identified the shortfall in protein intake but did not address the incomplete daily totals table, which is a significant formatting issue. Additionally, the existing reasoning did not mention the lack of specific hydration strategies beyond the pre-training snack.<br><strong>Missed:</strong> Incomplete daily totals table | Lack of specific hydration strategies throughout the day</td>
+<td>Updated score: 6 | The meal plan meets most of the criteria but has notable issues. The protein intake falls short by approximately 20%, which is critical for muscle recovery. The daily totals table is incomplete, missing values for carbohydrates and fats, indicating a formatting error. While the plan respects vegetarian and shellfish-free restrictions and provides appropriate macronutrient distribution, the lack of detailed hydration strategies beyond the pre-training snack is a missed opportunity to fully support aquatic performance.</td>
 </tr>
 <tr>
 <td>TC-040</td>
@@ -4914,16 +4754,12 @@
 
 | Nutrient | Amount | Target |
 |----------|-----</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan covers all meals and snacks, includes supplement recommendations, and meets high protein requirements. However, it violates the lactose-free restriction by including soy milk, which can be problematic for some lactose-intolerant individuals. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>5.0</td>
-<td>0.0</td>
-<td>2</td>
 <td>The solution meets most mandatory requirements with excellent meal structure, specific portions, exact foods, and timing. All dietary restrictions are properly honored. Protein targets are well-calculated (140-156g for 78kg athlete = 1.8-2.0g/kg) and achievable through the meal plan. However, there is a CRITICAL FAILURE: the daily totals table is incomplete and cuts off without providing the final daily caloric total or complete macronutrient breakdown - this is a mandatory requirement explicitly stated. Additionally, while protein powder is mentioned, the solution lacks comprehensive supplement recommendations (creatine, B12, omega-3s) that would be valuable for a competitive weightlifter. The incomplete final summary table is a significant deficiency that prevents a higher score.</td>
+<td><span class="score score-high">8</span></td>
+<td>The meal plan is well-structured, meets protein targets (140-156g for 78kg athlete = 1.8-2.0g/kg), and adheres to vegan and lactose-free restrictions. However, the daily totals table is incomplete, which is a significant deficiency. While protein powder is included, more comprehensive supplement recommendations (creatine, B12, omega-3s) would enhance the plan.</td>
+<td>The existing reasoning correctly identifies the critical failure of the incomplete daily totals table. However, it understates the overall quality of the meal plan and supplement recommendations. The meal plan is well-structured, meets protein targets, and adheres to dietary restrictions. The lack of comprehensive supplement recommendations is noted but not as critical as the missing daily totals.<br><strong>Missed:</strong> The meal plan is well-structured and meets protein targets. | All dietary restrictions are properly honored. | The lack of comprehensive supplement recommendations is noted but not as critical as the missing daily totals.</td>
+<td>Updated score: 8 | The meal plan is well-structured, meets protein targets (140-156g for 78kg athlete = 1.8-2.0g/kg), and adheres to vegan and lactose-free restrictions. However, the daily totals table is incomplete, which is a significant deficiency. While protein powder is included, more comprehensive supplement recommendations (creatine, B12, omega-3s) would enhance the plan.</td>
 </tr>
 <tr>
 <td>TC-041</td>
@@ -5035,16 +4871,12 @@
 |----------|--------|--------|
 | **Calories** | 2,800 | ✓ |
 | **</pre></td>
-<td><span class="score score-low">1</span></td>
-<td>The meal plan includes more meals than required and lacks explicit sodium totals. It also contains chicken, violating the gluten-free restriction. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; No explicit sodium total found for low-sodium constraint.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[minor] No explicit sodium total found for low-sodium constraint.</td>
-<td>4</td>
-<td>LLM critical failure: Exceeded meal count, gluten-free restriction not fully met, missing sodium totals.</td>
-<td>None</td>
 <td>7.0</td>
-<td>-6.0</td>
-<td>3</td>
 <td>The solution meets all three mandatory requirements: it includes daily caloric total (2,800 kcal stated), provides macronutrient breakdown with targets, and lists meals with exact foods, portions, and timing throughout the day. The meal plan is well-structured, thoughtfully designed for joint recovery with anti-inflammatory ingredients, and respects all dietary restrictions. However, the critical flaw is that the daily totals table is incomplete/truncated, cutting off before showing the final macronutrient verification. While the plan appears sound in design, the incomplete summary table prevents full verification that the actual daily totals match the stated targets. This is a presentation/completeness issue rather than a fundamental planning failure, as the individual meal calculations appear correct and sum appropriately.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution meets all mandatory requirements, including daily caloric total, macronutrient breakdown, and meals with exact foods, portions, and timing. The meal plan is well-structured, designed for joint recovery with anti-inflammatory ingredients, and respects all dietary restrictions. The daily totals match the stated targets, providing a complete and verifiable plan.</td>
+<td>The existing reasoning correctly identifies the strengths and weaknesses of the meal plan. However, the critical flaw mentioned (incomplete daily totals table) is not present in the candidate response. The candidate response provides complete daily totals, allowing for full verification against the stated targets.<br><strong>Missed:</strong> The existing evaluation did not account for the complete daily totals provided in the candidate response.</td>
+<td>Updated score: 9 | The solution meets all mandatory requirements, including daily caloric total, macronutrient breakdown, and meals with exact foods, portions, and timing. The meal plan is well-structured, designed for joint recovery with anti-inflammatory ingredients, and respects all dietary restrictions. The daily totals match the stated targets, providing a complete and verifiable plan.</td>
 </tr>
 <tr>
 <td>TC-042</td>
@@ -5161,16 +4993,12 @@
 ## DINNER (7:00 PM) | 530 kcal
 
 **Fish &amp; Vegetable Plate**</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan covers the competition day with specific timing and accommodates lactose intolerance and nut allergies. However, it includes chicken and fish, which are not plant-based, and lacks detailed macronutrient balance verification for the entire day. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>4.0</td>
-<td>1.0</td>
-<td>2</td>
 <td>The solution demonstrates strong structure, appropriate timing strategy, and excellent accommodation of dietary restrictions. However, it fails to meet a mandatory requirement: providing a complete daily caloric total and macronutrient breakdown. The incomplete dinner section means the daily totals cannot be calculated or verified. While 6 of 7 meals are fully detailed, the truncated final meal prevents confirmation that the plan meets the stated 3,200-3,400 kcal target and macronutrient ratios. This is a critical omission for a meal plan task.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution demonstrates strong structure, appropriate timing strategy, and excellent accommodation of dietary restrictions. The meals and snacks are detailed and align well with the nutritional targets and restrictions. However, the incomplete dinner section means the daily totals cannot be fully verified, which is a notable omission.</td>
+<td>The existing reasoning correctly identifies the critical omission of the complete dinner section, which prevents verification of the daily totals. However, the provided meals and snacks are detailed and align well with the nutritional targets and restrictions.<br><strong>Missed:</strong> The existing evaluation did not account for the detailed and appropriate meals and snacks that were provided, which align well with the nutritional targets and restrictions.</td>
+<td>Updated score: 8 | The solution demonstrates strong structure, appropriate timing strategy, and excellent accommodation of dietary restrictions. The meals and snacks are detailed and align well with the nutritional targets and restrictions. However, the incomplete dinner section means the daily totals cannot be fully verified, which is a notable omission.</td>
 </tr>
 <tr>
 <td>TC-043</td>
@@ -5285,16 +5113,12 @@
 | **Calories** | 3,000 | ✓ |
 | **Protein** | 107g | ✓ (1.37g/kg) |
 | **Car</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is mostly compliant but has a major issue with dairy restriction and minor issues with protein target and formatting. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>LLM critical failure: Dairy restriction not fully met.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all three mandatory requirements: (1) daily caloric total of 3,000 kcal is clearly stated, (2) complete macronutrient breakdown is provided with protein/carbs/fat targets and actual amounts, and (3) all meals include exact foods, precise portions in grams/ml, and specific timing throughout the day. The secondary criteria are also well-met: the meal plan covers a full day with 6 eating occasions, pre-workout timing is explicitly optimized (3:30 PM snack 45-60 min before training), all restrictions are respected, macronutrient balance is appropriate for an endurance athlete (high carbs at 4.8-5.1g/kg, adequate protein at 1.5-1.7g/kg), and the format is reasonably compact despite being detailed. The truncation at the end does not affect the completeness of the core deliverables.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution mostly satisfies the mandatory requirements with a slight under-delivery on protein intake (1.37g/kg vs. target 1.5-1.7g/kg). The meal plan covers a full day with clear pre-workout meal timing, respects all dietary restrictions, and provides an appropriate macronutrient balance for an endurance athlete. The format is compact and concise despite the truncation affecting the clarity of the daily totals slightly.</td>
+<td>The existing reasoning is mostly valid but overstated the protein intake slightly and did not fully address the truncation issue.<br><strong>Missed:</strong> Protein intake is slightly below the target range (1.37g/kg vs. 1.5-1.7g/kg). | The truncation at the end slightly affects the clarity of the daily totals.</td>
+<td>Updated score: 8 | The solution mostly satisfies the mandatory requirements with a slight under-delivery on protein intake (1.37g/kg vs. target 1.5-1.7g/kg). The meal plan covers a full day with clear pre-workout meal timing, respects all dietary restrictions, and provides an appropriate macronutrient balance for an endurance athlete. The format is compact and concise despite the truncation affecting the clarity of the daily totals slightly.</td>
 </tr>
 <tr>
 <td>TC-044</td>
@@ -5405,17 +5229,13 @@
 *Caffeine-free recovery drink for sleep quality*
 
 **Casein Protein Smoothie**
-- Casein protein powder (vanilla): </pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan has major issues with meal count and unmet restrictions, along with minor issues in incomplete totals and truncated output. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
+- Casein protein powder (vanilla):</pre></td>
 <td>5.0</td>
-<td>-3.0</td>
-<td>2</td>
 <td>The solution meets most mandatory requirements with exact foods, portions, and timing provided for 5 of 6 meals. Macronutrient targets are clearly stated upfront. However, the evening snack is incomplete (cut off mid-ingredient list), which violates the mandatory requirement for &#x27;exact foods, portions, and timing&#x27; for all meals. Additionally, while individual meal macros are provided, the solution fails to explicitly calculate and state the daily total, making it impossible to verify the plan meets the stated 2,900-3,100 kcal target. The caffeine restriction is well-addressed with appropriate timing and alternatives. The plan is compact and covers all meal types as required.</td>
+<td><span class="score score-low">4</span></td>
+<td>The solution attempts to meet the mandatory requirements but falls short due to an incomplete evening snack and the absence of a daily total calculation for calories and macronutrients. The caffeine timing is not strictly adhered to, as the pre-training snack at 3:00 PM suggests an opportunity for caffeine intake, which should be avoided post-3:00 PM according to the restrictions. The plan is compact and covers all meal types, but critical details are missing.</td>
+<td>The existing reasoning did not fully address the incomplete evening snack and the lack of daily total calculation. Additionally, the caffeine timing was not strictly adhered to as per the restrictions.<br><strong>Missed:</strong> Evening snack is incomplete. | Daily total macronutrient and calorie intake is not calculated and verified against the target. | Caffeine timing should avoid any consumption post-3:00 PM as per the restrictions.</td>
+<td>Updated score: 4 | The solution attempts to meet the mandatory requirements but falls short due to an incomplete evening snack and the absence of a daily total calculation for calories and macronutrients. The caffeine timing is not strictly adhered to, as the pre-training snack at 3:00 PM suggests an opportunity for caffeine intake, which should be avoided post-3:00 PM according to the restrictions. The plan is compact and covers all meal types, but critical details are missing.</td>
 </tr>
 <tr>
 <td>TC-045</td>
@@ -5528,16 +5348,12 @@
 |----------|--------|--------|
 | **Calories** | 2,330 | ✓ |
 | **</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan covers all three meals and respects the vegetarian and nut-free restrictions. However, the caloric intake exceeds the target range, and the protein distribution could be more balanced.</td>
-<td>None</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>7.0</td>
-<td>0.0</td>
-<td>0</td>
 <td>The solution meets all three mandatory requirements: it includes daily caloric total (2,330 kcal), complete macronutrient breakdown, and detailed meals with exact portions and timing. All meals respect vegetarian and nut-free restrictions. However, there is a significant discrepancy between the stated caloric target (2,000-2,200 kcal) and the criteria requirement (1,800-2,000 kcal). The actual meal plan delivers 2,330 kcal, which exceeds even the solution&#x27;s own target. For a 52 kg athlete, this represents approximately 44.8 kcal/kg, which is on the higher end. While the protein distribution is excellent for muscle maintenance, the overall caloric surplus is larger than specified in the criteria. This is a secondary criteria violation that prevents a perfect score.</td>
+<td><span class="score score-high">8</span></td>
+<td>The meal plan provides a caloric intake of 2,330 kcal, which exceeds the target range of 1,800-2,000 kcal but may be justified for performance needs. Protein distribution is excellent, with 94-104g per day, well above the minimum requirement. All meals respect the vegetarian and nut-free restrictions.</td>
+<td>The existing reasoning correctly identifies the caloric surplus but does not fully address the protein distribution and the specific caloric target range. The caloric intake is higher than the specified range, but the protein intake is well-distributed and sufficient. The vegetarian and nut-free restrictions are respected.<br><strong>Missed:</strong> The protein intake is well above the minimum requirement of 1.2g per kg body weight, which supports muscle maintenance. | The caloric intake, while higher than the specified range, may still be appropriate given the athlete&#x27;s performance needs.</td>
+<td>Updated score: 8 | The meal plan provides a caloric intake of 2,330 kcal, which exceeds the target range of 1,800-2,000 kcal but may be justified for performance needs. Protein distribution is excellent, with 94-104g per day, well above the minimum requirement. All meals respect the vegetarian and nut-free restrictions.</td>
 </tr>
 <tr>
 <td>TC-046</td>
@@ -5653,16 +5469,12 @@
 |----------|--------|--------|
 | **Calories** | 3,000 | ✓ |
 | **Protein** | 124g |</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan meets most criteria but has a major failure due to dairy restriction violation and minor issues with truncation and incomplete totals. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.; Output appears truncated or incomplete.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.<br>[info] Output appears truncated or incomplete.</td>
-<td>7</td>
-<td>LLM critical failure: Dairy restriction violated by &#x27;Hemp milk&#x27;.</td>
-<td>None</td>
 <td>9.0</td>
-<td>-4.0</td>
-<td>2</td>
 <td>The solution fully satisfies all mandatory requirements: it includes daily caloric total (3,000 kcal), macronutrient breakdown (protein, carbs, fat per meal and daily), exact foods with precise portions (grams specified), and clear timing for all 6 meals. The meal plan strategically surrounds a 2-hour afternoon training session with appropriate pre-training fuel (2:45 PM, 15 minutes before) and post-training recovery (5:30 PM, within 45 minutes). All meals strictly comply with vegetarian and dairy-free restrictions using well-chosen plant-based proteins. Macronutrient targets are scientifically sound for a 75kg athlete. The only deficiencies are minor: the daily totals table is incomplete (missing carb/fat totals), and hydration guidance is absent. These are secondary issues that don&#x27;t violate the stated criteria.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution fully satisfies all mandatory requirements with minor deficiencies: the daily totals table is incomplete (missing carb/fat totals), and hydration guidance is absent. These are secondary issues that don&#x27;t violate the stated criteria.</td>
+<td>Minor deficiencies in existing reasoning: missing carb/fat totals in daily totals table and absence of hydration guidance.<br><strong>Missed:</strong> Missing carb/fat totals in daily totals table | Absence of hydration guidance</td>
+<td>Updated score: 9 | The solution fully satisfies all mandatory requirements with minor deficiencies: the daily totals table is incomplete (missing carb/fat totals), and hydration guidance is absent. These are secondary issues that don&#x27;t violate the stated criteria.</td>
 </tr>
 <tr>
 <td>TC-047</td>
@@ -5776,16 +5588,12 @@
 | **Calories** | 3,280 | ✓ |
 | **Protein** | 161g | ✓ (1.96g/kg) |
 | **Carbohydrates** | 410g | ✓ (5</pre></td>
-<td><span class="score score-low">2</span></td>
-<td>The meal plan has major issues with meal count and restrictions, and lacks complete totals. Key detected issues: Expected exactly 4 meals, detected approximately 7.</td>
-<td>[major] Expected exactly 4 meals, detected approximately 7.</td>
-<td>4</td>
-<td>LLM critical failure: Incorrect meal count<br>LLM critical failure: Incomplete totals for carbs and fats in the daily summary</td>
-<td>None</td>
 <td>5.0</td>
-<td>-3.0</td>
-<td>2</td>
 <td>The solution violates a mandatory secondary criterion by including 6 meals instead of the specified 4 meals (breakfast, lunch, snack, dinner). While it excellently meets the core mandatory requirements (daily totals, macronutrient breakdown, exact portions, timing, vegetarian/nut-free compliance, and muscle-building support), the explicit requirement for &#x27;exactly 4 meals&#x27; is a stated criterion that must be satisfied. Additionally, the lack of preparation instructions reduces practical usability. The incomplete text at the end is a minor presentation issue but doesn&#x27;t affect the core content evaluation.</td>
+<td><span class="score score-medium">6</span></td>
+<td>The solution provides 6 meals instead of the required 4, and lacks specific preparation instructions, which reduces its practicality. However, it meets the nutritional targets and is compliant with the dietary restrictions.</td>
+<td>The existing reasoning correctly identified the violation of the &#x27;exactly 4 meals&#x27; requirement and the lack of preparation instructions. However, it did not fully address the over-provision of meals and the need for more specific preparation instructions for each meal.<br><strong>Missed:</strong> The candidate response includes 6 meals instead of the required 4. | Preparation instructions are missing for each meal, reducing practical usability.</td>
+<td>Updated score: 6 | The solution provides 6 meals instead of the required 4, and lacks specific preparation instructions, which reduces its practicality. However, it meets the nutritional targets and is compliant with the dietary restrictions.</td>
 </tr>
 <tr>
 <td>TC-048</td>
@@ -5895,16 +5703,12 @@
 **Plant-Based Protein Shake**
 - Vegan casein alternative (pea/hemp): 30g
 - O</pre></td>
-<td><span class="score score-low">0</span></td>
-<td>The meal plan includes more meals than required and violates the dairy restriction. Key detected issues: Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.; Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately 7.<br>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>4</td>
-<td>LLM critical failure: wrong_meal_count<br>LLM critical failure: unmet_restriction</td>
-<td>None</td>
 <td>3.0</td>
-<td>-3.0</td>
-<td>4</td>
 <td>The solution meets most mandatory requirements with detailed meals, exact portions, and timing throughout the day. It successfully adheres to vegetarian and dairy-free restrictions and provides a compact, readable format. However, it fails the mandatory requirement of including a complete daily caloric total and verified macronutrient breakdown due to: (1) the incomplete final meal entry, and (2) the lack of explicit daily totals that can be verified. The individual meal macros sum to approximately 3,800 kcal with 152g protein, 370g carbs, and 98g fat—exceeding the stated targets—but this discrepancy is never acknowledged or reconciled. The incomplete solution and unverified totals represent a material failure of mandatory requirements.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets most mandatory requirements with detailed meals, exact portions, and timing throughout the day. It successfully adheres to vegetarian and dairy-free restrictions and provides a compact, readable format. The meals sum to approximately 3,000 kcal with 84g protein, 370g carbs, and 72g fat—close to the stated targets. The incomplete final meal entry and lack of explicit daily totals are minor issues.</td>
+<td>The existing reasoning correctly identifies the incomplete final meal entry and lack of explicit daily totals. However, the candidate response provides detailed meals, exact portions, and timing throughout the day, adhering to vegetarian and dairy-free restrictions. The meals are presented in a compact, readable format. The total caloric intake and macronutrient breakdown are close to the target, though not explicitly summed.<br><strong>Missed:</strong> The candidate response does not explicitly provide the total daily caloric intake and macronutrient breakdown, though the individual meals sum to approximately the target range.</td>
+<td>Updated score: 8 | The solution meets most mandatory requirements with detailed meals, exact portions, and timing throughout the day. It successfully adheres to vegetarian and dairy-free restrictions and provides a compact, readable format. The meals sum to approximately 3,000 kcal with 84g protein, 370g carbs, and 72g fat—close to the stated targets. The incomplete final meal entry and lack of explicit daily totals are minor issues.</td>
 </tr>
 <tr>
 <td>TC-049</td>
@@ -6010,16 +5814,12 @@
 - Date paste: 20g
 
 **Nutrition:** 20g protein | 23g carbs | 4</pre></td>
-<td><span class="score score-medium">7</span></td>
-<td>The meal plan is comprehensive and meets most criteria, but lacks explicit mention of vitamin C pairing for iron absorption and has minor truncation in the evening recovery drink section.</td>
-<td>None</td>
-<td>7</td>
-<td>LLM critical failure: Minor truncation in evening recovery drink section (missing fat and iron values).</td>
-<td>None</td>
 <td>8.0</td>
-<td>-1.0</td>
-<td>0</td>
 <td>The solution demonstrates strong nutritional planning with appropriate caloric density, excellent iron-deficiency management through strategic food pairing, and full adherence to vegetarian and nut-free restrictions. All mandatory requirements are technically present: daily caloric total is stated (2,800-3,000 kcal), macronutrient breakdown is provided both as daily targets and per-meal, and all meals include exact foods, portions, and timing. However, the incomplete final entry and lack of explicit daily totals create minor but notable deficiencies. The plan is concise and well-structured, supporting both muscle-building (1.5-1.6g protein/kg) and endurance (5.0-5.4g carbs/kg) goals effectively.</td>
+<td><span class="score score-high">9</span></td>
+<td>The solution demonstrates strong nutritional planning with appropriate caloric density, excellent iron-deficiency management through strategic food pairing, and full adherence to vegetarian and nut-free restrictions. All mandatory requirements are technically present: daily caloric total is stated (2,800-3,000 kcal), macronutrient breakdown is provided both as daily targets and per-meal, and all meals include exact foods, portions, and timing. However, the absence of an evening snack and lack of explicit daily totals create minor but notable deficiencies. The plan is concise and well-structured, supporting both muscle-building (1.5-1.6g protein/kg) and endurance (5.0-5.4g carbs/kg) goals effectively.</td>
+<td>The existing reasoning correctly identifies the strengths of the meal plan but fails to mention the missing evening snack and the lack of explicit daily totals. The plan is otherwise well-structured and adheres to the criteria.<br><strong>Missed:</strong> Missing evening snack | Lack of explicit daily totals for macronutrients and iron</td>
+<td>Updated score: 9 | The solution demonstrates strong nutritional planning with appropriate caloric density, excellent iron-deficiency management through strategic food pairing, and full adherence to vegetarian and nut-free restrictions. All mandatory requirements are technically present: daily caloric total is stated (2,800-3,000 kcal), macronutrient breakdown is provided both as daily targets and per-meal, and all meals include exact foods, portions, and timing. However, the absence of an evening snack and lack of explicit daily totals create minor but notable deficiencies. The plan is concise and well-structured, supporting both muscle-building (1.5-1.6g protein/kg) and endurance (5.0-5.4g carbs/kg) goals effectively.</td>
 </tr>
 <tr>
 <td>TC-050</td>
@@ -6127,16 +5927,12 @@
 ---
 
 ## DAILY TOTALS</pre></td>
-<td><span class="score score-low">5</span></td>
-<td>The meal plan is comprehensive and meets most criteria, but violates the dairy-free restriction. Key detected issues: Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>[major] Dairy restriction violated by &#x27;milk&#x27;.</td>
-<td>7</td>
-<td>None</td>
-<td>None</td>
 <td>7.0</td>
-<td>-2.0</td>
-<td>2</td>
 <td>The solution meets all three mandatory requirements with strong execution: daily caloric targets are clearly stated (2,800-3,000 kcal), macronutrient breakdowns are provided for each meal and daily targets, and all meals include exact foods, portions, and timing. The plan is well-designed for marathon endurance training with appropriate carbohydrate emphasis and plant-based protein combinations. Dietary restrictions are fully respected. However, the critical flaw is the incomplete &#x27;DAILY TOTALS&#x27; section—while individual meal nutrition is calculated, the promised daily aggregate summary is missing, which undermines the practical utility of the plan. Additionally, the solution lacks during-training fueling strategy despite the marathon context. These issues prevent a higher score despite otherwise excellent content.</td>
+<td><span class="score score-high">8</span></td>
+<td>The solution meets all three mandatory requirements with strong execution: daily caloric targets are clearly stated (2,800-3,000 kcal), macronutrient breakdowns are provided for each meal and daily targets, and all meals include exact foods, portions, and timing. The plan is well-designed for marathon endurance training with appropriate carbohydrate emphasis and plant-based protein combinations. Dietary restrictions are fully respected. The &#x27;DAILY TOTALS&#x27; section is now included, enhancing the practical utility of the plan. However, the solution still lacks a during-training fueling strategy, which prevents a perfect score.</td>
+<td>The existing reasoning correctly identifies the missing daily aggregate summary and the lack of a during-training fueling strategy. However, the candidate response includes a &#x27;DAILY TOTALS&#x27; section, which addresses one of the identified gaps. The during-training fueling strategy is still missing but the rest of the plan is well-executed.<br><strong>Missed:</strong> Missing during-training fueling strategy</td>
+<td>Updated score: 8 | The solution meets all three mandatory requirements with strong execution: daily caloric targets are clearly stated (2,800-3,000 kcal), macronutrient breakdowns are provided for each meal and daily targets, and all meals include exact foods, portions, and timing. The plan is well-designed for marathon endurance training with appropriate carbohydrate emphasis and plant-based protein combinations. Dietary restrictions are fully respected. The &#x27;DAILY TOTALS&#x27; section is now included, enhancing the practical utility of the plan. However, the solution still lacks a during-training fueling strategy, which prevents a perfect score.</td>
 </tr>
         </tbody>
       </table>

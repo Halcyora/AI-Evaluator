@@ -4,6 +4,7 @@ import os
 import re
 from datetime import datetime, timezone
 from html import escape
+from html.parser import HTMLParser
 from pathlib import Path
 from statistics import mean
 from typing import Any, Dict, List, Optional, Tuple
@@ -16,6 +17,105 @@ from dotenv import load_dotenv
 def load_json(path: Path) -> Any:
     with path.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+
+class ReportTableParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.rows: List[List[str]] = []
+        self._in_tr = False
+        self._in_td = False
+        self._current_row: List[str] = []
+        self._current_cell_parts: List[str] = []
+
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
+        del attrs
+        if tag == "tr":
+            self._in_tr = True
+            self._current_row = []
+        elif tag == "td" and self._in_tr:
+            self._in_td = True
+            self._current_cell_parts = []
+        elif tag == "br" and self._in_td:
+            self._current_cell_parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "td" and self._in_td:
+            self._in_td = False
+            self._current_row.append("".join(self._current_cell_parts).strip())
+        elif tag == "tr" and self._in_tr:
+            self._in_tr = False
+            if self._current_row:
+                self.rows.append(self._current_row)
+
+    def handle_data(self, data: str) -> None:
+        if self._in_td:
+            self._current_cell_parts.append(data)
+
+
+def parse_prompt_inputs_cell(cell_text: str) -> Dict[str, str]:
+    inputs: Dict[str, str] = {}
+    for line in cell_text.splitlines():
+        part = line.strip()
+        if not part or ":" not in part:
+            continue
+        key, value = part.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if key:
+            inputs[key] = value
+    return inputs
+
+
+def parse_criteria_cell(cell_text: str) -> List[str]:
+    criteria: List[str] = []
+    for part in cell_text.splitlines():
+        text = part.strip()
+        if not text:
+            continue
+        text = re.sub(r"^[•\-\s]+", "", text)
+        criteria.append(text)
+    return criteria
+
+
+def parse_output_html_responses(path: Path) -> List[Dict[str, Any]]:
+    parser = ReportTableParser()
+    parser.feed(path.read_text(encoding="utf-8"))
+    output_items: List[Dict[str, Any]] = []
+
+    for cells in parser.rows:
+        if len(cells) < 6:
+            continue
+
+        scenario = cells[0].strip()
+        prompt_inputs = parse_prompt_inputs_cell(cells[1])
+        solution_criteria = parse_criteria_cell(cells[2])
+        output_text = cells[3].strip()
+        score_text = cells[4].strip()
+        reasoning = cells[5].strip()
+
+        score_value: Optional[float] = None
+        score_match = re.search(r"\d+(?:\.\d+)?", score_text)
+        if score_match:
+            score_value = float(score_match.group(0))
+
+        output_items.append(
+            {
+                "test_case": {
+                    "scenario": scenario,
+                    "prompt_inputs": prompt_inputs,
+                    "solution_criteria": solution_criteria,
+                },
+                "output": output_text,
+                "score": score_value,
+                "reasoning": reasoning,
+            }
+        )
+
+    if not output_items:
+        raise ValueError(f"No evaluable rows found in HTML responses file: {path}")
+
+    return output_items
 
 
 def save_json(path: Path, data: Any) -> None:
@@ -33,478 +133,45 @@ def normalize_case_key(case: Dict[str, Any]) -> str:
     return json.dumps(key_obj, sort_keys=True, ensure_ascii=False)
 
 
-def extract_number(text: str) -> Optional[float]:
-    match = re.search(r"(\d+(?:\.\d+)?)", text)
-    if not match:
-        return None
-    return float(match.group(1))
-
-
-def parse_weight_kg(case: Dict[str, Any]) -> Optional[float]:
-    return extract_number(str(case.get("prompt_inputs", {}).get("weight", "")))
-
-
-def extract_meal_markers(output_text: str) -> Dict[str, bool]:
-    text = output_text.lower()
-    markers = {
-        "breakfast": bool(re.search(r"\bbreakfast\b", text)),
-        "lunch": bool(re.search(r"\blunch\b", text)),
-        "dinner": bool(re.search(r"\bdinner\b", text)),
-        "snack": bool(re.search(r"\bsnack|snacks\b", text)),
+def normalize_case_key_relaxed(case: Dict[str, Any]) -> str:
+    prompt_inputs = case.get("prompt_inputs", {})
+    key_obj = {
+        "scenario": str(case.get("scenario", "")).strip().lower(),
+        "prompt_inputs": {k: str(v).strip().lower() for k, v in sorted(prompt_inputs.items())},
     }
-    return markers
+    return json.dumps(key_obj, sort_keys=True, ensure_ascii=False)
 
 
-def classify_eating_heading(line: str) -> Optional[str]:
-    for marker in ["breakfast", "lunch", "dinner"]:
-        if marker in line:
-            return marker
-
-    if re.search(r"\b(snack|pre-training|post-workout|post-training|pre-match|recovery|hydration|during event)\b", line):
-        return "snack"
-
-    return None
-
-
-def extract_eating_occasions(output_text: str) -> List[str]:
-    occasions: List[str] = []
-    skip_heading_terms = [
-        "daily nutritional target",
-        "daily totals",
-        "recommendation",
-        "rationale",
-        "eating window",
-    ]
-
-    for raw_line in output_text.splitlines():
-        line = raw_line.strip().lower()
-        if not line or not line.startswith(("##", "**")) or any(term in line for term in skip_heading_terms):
-            continue
-
-        hit = classify_eating_heading(line)
-        if hit:
-            occasions.append(hit)
-
-    return occasions
-
-
-def estimate_meal_count(output_text: str) -> int:
-    structured_hits = extract_eating_occasions(output_text)
-    if structured_hits:
-        return min(len(structured_hits), 10)
-
-    # Fallback: count obvious meal label occurrences.
-    fallback = len(re.findall(r"\b(breakfast|lunch|dinner|snack|snacks)\b", output_text.lower()))
-    return min(fallback, 10)
-
-
-def detect_truncation(output_text: str) -> bool:
-    text = output_text.strip().lower()
-    if "[truncated]" in text:
-        return True
-    # Common signs of cut output
-    if text.endswith(("|", "-", "(")):
-        return True
-    return False
-
-
-def extract_macro_grams(output_text: str, macro_name: str) -> Optional[float]:
-    patterns = [
-        rf"{macro_name}\*\*\s*:?\s*(\d+(?:\.\d+)?)\s*g",
-        rf"{macro_name}\s*:?\s*(\d+(?:\.\d+)?)\s*g",
-    ]
-    found: List[float] = []
-    for pattern in patterns:
-        for m in re.finditer(pattern, output_text, flags=re.IGNORECASE):
-            found.append(float(m.group(1)))
-    if not found:
-        return None
-    # In many plans the largest occurrence is the daily total.
-    return max(found)
-
-
-def extract_total_calories(output_text: str) -> Optional[float]:
-    patterns = [
-        r"\*\*Calories\*\*\s*\|\s*(\d+(?:\.\d+)?)",
-        r"Calories\s*:?\s*(\d+(?:\.\d+)?)\s*kcal",
-        r"daily\s+total\D{0,10}(\d+(?:\.\d+)?)\s*kcal",
-    ]
-    found: List[float] = []
-    for pattern in patterns:
-        for m in re.finditer(pattern, output_text, flags=re.IGNORECASE):
-            found.append(float(m.group(1)))
-    if not found:
-        return None
-    return max(found)
-
-
-def contains_any(text: str, keywords: List[str]) -> Optional[str]:
-    lower = text.lower()
-    for keyword in keywords:
-        if re.search(rf"\b{re.escape(keyword.lower())}\b", lower):
-            return keyword
-    return None
-
-
-def make_issue(issue_type: str, severity: str, detail: str) -> Dict[str, str]:
-    return {"type": issue_type, "severity": severity, "detail": detail}
-
-
-def restriction_enabled(restrictions_text: str, terms: List[str]) -> bool:
-    return any(term in restrictions_text for term in terms)
-
-
-def add_keyword_restriction_issue(
-    issues: List[Dict[str, str]],
-    restrictions_text: str,
-    trigger_terms: List[str],
-    output_text: str,
-    blocked_keywords: List[str],
-    detail_prefix: str,
-) -> None:
-    if not restriction_enabled(restrictions_text, trigger_terms):
-        return
-
-    hit = contains_any(output_text, blocked_keywords)
-    if hit:
-        issues.append(make_issue("unmet_restriction", "major", f"{detail_prefix} '{hit}'."))
-
-
-def token_numbers_before_phrase(text: str, phrase_tokens: List[str]) -> List[float]:
-    tokens = re.split(r"\s+", text.lower().replace("\n", " ").strip())
-    out: List[float] = []
-    window = len(phrase_tokens)
-    if not tokens or window == 0:
-        return out
-
-    for i in range(len(tokens) - window):
-        if tokens[i + 1 : i + 1 + window] == phrase_tokens:
-            value_text = tokens[i].strip(",;:|()[]{}")
-            try:
-                out.append(float(value_text))
-            except ValueError:
-                continue
-    return out
-
-
-def extract_sodium_mentions(output_text: str) -> List[float]:
-    return token_numbers_before_phrase(output_text, ["mg", "sodium"])
-
-
-def check_low_sodium_rule(restrictions_text: str, output_text: str) -> List[Dict[str, str]]:
-    if not restriction_enabled(restrictions_text, ["low-sodium", "sodium"]):
-        return []
-
-    sodium_match = re.search(r"max(?:imum)?\s*(\d+)\s*mg", restrictions_text)
-    limit = float(sodium_match.group(1)) if sodium_match else 1500.0
-    sodium_mentions = extract_sodium_mentions(output_text)
-
-    if not sodium_mentions:
-        return [make_issue("incomplete_totals", "minor", "No explicit sodium total found for low-sodium constraint.")]
-
-    if max(sodium_mentions) > limit:
-        return [make_issue("unmet_restriction", "major", f"Sodium appears above limit ({limit} mg).")]
-
-    return []
-
-
-def check_restriction_compliance(restrictions: str, output_text: str) -> List[Dict[str, str]]:
-    issues: List[Dict[str, str]] = []
-    r = restrictions.lower()
-
-    non_veg = [
-        "chicken",
-        "beef",
-        "pork",
-        "fish",
-        "salmon",
-        "tuna",
-        "shrimp",
-        "turkey",
-        "ham",
-        "bacon",
-        "lamb",
-        "meat",
-        "seafood",
-    ]
-    nuts = [
-        "almond",
-        "walnut",
-        "cashew",
-        "pistachio",
-        "hazelnut",
-        "pecan",
-        "macadamia",
-        "peanut",
-        "nut butter",
-    ]
-    sesame_terms = ["sesame", "tahini"]
-    dairy = ["milk", "cheese", "yogurt", "butter", "whey", "casein", "cream", "cottage cheese"]
-    refined_sugar = ["white sugar", "brown sugar", "corn syrup", "honey", "maple syrup", "syrup"]
-    processed_food = ["protein powder", "energy bar", "granola bar", "processed"]
-    pork_alcohol = ["pork", "bacon", "ham", "wine", "beer", "alcohol", "rum", "vodka"]
-
-    restriction_checks = [
-        (["vegetarian"], non_veg, "Vegetarian restriction violated by"),
-        (["no nuts", "nut", "allerg"], nuts, "Nut-free restriction violated by"),
-        (["sesame"], sesame_terms, "Sesame restriction violated by"),
-        (["no dairy", "lactose"], dairy, "Dairy restriction violated by"),
-        (["halal"], pork_alcohol, "Halal restriction violated by"),
-        (["no refined sugars"], refined_sugar, "No-refined-sugar restriction potentially violated by"),
-        (["no processed foods"], processed_food, "No-processed-foods restriction potentially violated by"),
-    ]
-    for trigger_terms, blocked_keywords, detail_prefix in restriction_checks:
-        add_keyword_restriction_issue(
-            issues,
-            r,
-            trigger_terms,
-            output_text,
-            blocked_keywords,
-            detail_prefix,
-        )
-
-    if "organic" in r:
-        organic_mentions = len(re.findall(r"\borganic\b", output_text.lower()))
-        if organic_mentions < 3:
-            issues.append(make_issue("unmet_restriction", "major", "Organic-only restriction may not be consistently satisfied."))
-
-    issues.extend(check_low_sodium_rule(r, output_text))
-
-    return issues
-
-
-def check_exact_meal_count(criterion: str, meal_count: int) -> List[Dict[str, str]]:
-    if "exactly 4 meals" in criterion and meal_count != 4:
-        return [make_issue("wrong_meal_count", "major", f"Expected exactly 4 meals, detected approximately {meal_count}.")]
-    return []
-
-
-def check_required_main_meals(criterion: str, meal_markers: Dict[str, bool]) -> List[Dict[str, str]]:
-    needs_main_meals = "all 3 meals" in criterion or "all three meals" in criterion or "covers all 3 meals" in criterion
-    if not needs_main_meals:
-        return []
-
-    missing = [k for k in ["breakfast", "lunch", "dinner"] if not meal_markers[k]]
-    if missing:
-        return [make_issue("missing_sections", "major", "Missing required meals: " + ", ".join(missing))]
-    return []
-
-
-def check_required_snacks(criterion: str, meal_markers: Dict[str, bool]) -> List[Dict[str, str]]:
-    if ("plus snacks" in criterion or "and snacks" in criterion) and not meal_markers["snack"]:
-        return [make_issue("missing_sections", "major", "Snacks required by criterion but not detected.")]
-    return []
-
-
-def check_meal_range(criterion: str, meal_count: int) -> List[Dict[str, str]]:
-    if "3-4 meals/snacks" in criterion and not (3 <= meal_count <= 4):
-        return [
-            make_issue(
-                "wrong_meal_count",
-                "major",
-                f"Expected 3-4 meals/snacks, detected approximately {meal_count}.",
-            )
-        ]
-    return []
-
-
-def check_breakfast_lunch_dinner_snacks_structure(criterion: str, meal_count: int) -> List[Dict[str, str]]:
-    if "at least one" in criterion:
-        return []
-
-    structure_phrases = [
-        "breakfast, lunch, dinner, and snacks",
-        "breakfast, lunch, dinner and snacks",
-        "3 meals and snacks",
-        "three meals and snacks",
-        "three meals plus snacks",
-        "all three meals plus snacks",
-    ]
-    if any(phrase in criterion for phrase in structure_phrases) and meal_count != 4:
-        return [
-            make_issue(
-                "wrong_meal_count",
-                "major",
-                f"Expected breakfast, lunch, dinner, and one snack (4 total), detected approximately {meal_count}.",
-            )
-        ]
-    return []
-
-
-def check_protein_per_kg(criterion: str, case: Dict[str, Any], output_text: str) -> List[Dict[str, str]]:
-    req_values = token_numbers_before_phrase(criterion, ["g", "per", "kg"])
-    if not req_values:
-        return []
-
-    req_per_kg = float(req_values[0])
-    weight_kg = parse_weight_kg(case)
-    protein_total = extract_macro_grams(output_text, "protein")
-    if weight_kg and protein_total:
-        required_total = req_per_kg * weight_kg
-        if protein_total + 1e-6 < required_total:
-            return [
-                make_issue(
-                    "incomplete_totals",
-                    "major",
-                    f"Protein appears below required threshold ({required_total:.1f} g).",
-                )
-            ]
-        return []
-
-    return [make_issue("incomplete_totals", "minor", "Could not fully verify protein-per-kg criterion from output totals.")]
-
-
-def check_protein_percent(criterion: str, output_text: str) -> List[Dict[str, str]]:
-    match = re.search(r"protein\s+comprises\s+at\s+least\s+(\d+(?:\.\d+)?)%", criterion)
-    if not match:
-        return []
-
-    min_pct = float(match.group(1))
-    protein_total = extract_macro_grams(output_text, "protein")
-    calories = extract_total_calories(output_text)
-    if protein_total and calories:
-        pct = (protein_total * 4.0 / calories) * 100.0
-        if pct + 1e-6 < min_pct:
-            return [
-                make_issue(
-                    "incomplete_totals",
-                    "major",
-                    f"Protein calories percentage appears low ({pct:.1f}% < {min_pct:.1f}%).",
-                )
-            ]
-        return []
-
-    return [make_issue("incomplete_totals", "minor", "Could not verify protein calorie percentage criterion from totals.")]
-
-
-def check_carbohydrate_percent(criterion: str, output_text: str) -> List[Dict[str, str]]:
-    match = re.search(r"carbohydrates\s+comprise\s+(\d+)-(\d+)%", criterion)
-    if not match:
-        return []
-
-    low = float(match.group(1))
-    high = float(match.group(2))
-    carbs_total = extract_macro_grams(output_text, "carbohydrates")
-    calories = extract_total_calories(output_text)
-    if carbs_total and calories:
-        pct = (carbs_total * 4.0 / calories) * 100.0
-        if pct < low or pct > high:
-            return [
-                make_issue(
-                    "incomplete_totals",
-                    "major",
-                    f"Carbohydrate percentage appears outside target ({pct:.1f}% not in {low:.1f}-{high:.1f}%).",
-                )
-            ]
-        return []
-
-    return [make_issue("incomplete_totals", "minor", "Could not verify carbohydrate percentage criterion from totals.")]
-
-
-def criteria_issues_for_single_rule(
-    criterion: str,
+def build_evaluator_prompt(
     case: Dict[str, Any],
-    output_text: str,
-    meal_markers: Dict[str, bool],
-    meal_count: int,
-) -> List[Dict[str, str]]:
-    issues: List[Dict[str, str]] = []
-    checks = [
-        lambda: check_exact_meal_count(criterion, meal_count),
-        lambda: check_required_main_meals(criterion, meal_markers),
-        lambda: check_required_snacks(criterion, meal_markers),
-        lambda: check_meal_range(criterion, meal_count),
-        lambda: check_breakfast_lunch_dinner_snacks_structure(criterion, meal_count),
-        lambda: check_protein_per_kg(criterion, case, output_text),
-        lambda: check_protein_percent(criterion, output_text),
-        lambda: check_carbohydrate_percent(criterion, output_text),
-    ]
-    for check in checks:
-        issues.extend(check())
-    return issues
-
-
-def deduplicate_issues(issues: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    unique: Dict[str, Dict[str, str]] = {}
-    for issue in issues:
-        unique_key = f"{issue['type']}|{issue['detail']}"
-        unique[unique_key] = issue
-    return list(unique.values())
-
-
-def criteria_rule_checks(case: Dict[str, Any], output_text: str) -> List[Dict[str, str]]:
-    issues: List[Dict[str, str]] = []
-    criteria = [str(c).lower() for c in case.get("solution_criteria", [])]
-    meal_markers = extract_meal_markers(output_text)
-    meal_count = estimate_meal_count(output_text)
-
-    for criterion in criteria:
-        issues.extend(criteria_issues_for_single_rule(criterion, case, output_text, meal_markers, meal_count))
-
-    restrictions = str(case.get("prompt_inputs", {}).get("restrictions", ""))
-    if restrictions and restrictions.lower() != "none":
-        issues.extend(check_restriction_compliance(restrictions, output_text))
-
-    if detect_truncation(output_text):
-        # Keep truncation visible to reviewers but avoid auto-failing if core criteria are still met.
-        issues.append(make_issue("truncated_output", "info", "Output appears truncated or incomplete."))
-
-    if not re.search(r"\b(calories|protein|carbohydrates|fat|daily total|daily totals)\b", output_text.lower()):
-        issues.append(make_issue("incomplete_totals", "minor", "No clear daily nutrition totals were detected."))
-
-    return deduplicate_issues(issues)
-
-
-def build_evaluator_prompt(case: Dict[str, Any], response_text: str, deterministic_issues: List[Dict[str, str]]) -> str:
+    response_text: str,
+    existing_score: Optional[float],
+    existing_reasoning: Optional[str],
+) -> str:
     schema_hint = {
-        "score_0_to_10": "integer",
-        "reasoning": "string (max 120 words)",
-        "criteria_results": [
-            {
-                "criterion": "string",
-                "met": "boolean",
-                "evidence": "string",
-                "issue_type": "one of: missing_sections|wrong_meal_count|unmet_restriction|incomplete_totals|truncated_output|other",
-            }
-        ],
-        "critical_failures": ["string"],
+        "updated_score_0_to_10": "integer",
+        "reasoning_gaps": "string (concise: what is wrong/missed in existing reasoning)",
+        "missed_points": ["string"],
+        "corrected_reasoning": "string (concise corrected reasoning for final score)",
     }
 
     return (
-        "Role: You are an expert evaluator for one-day athlete meal-plan prompts.\n\n"
-        "Objective:\n"
-        "- Evaluate only against provided solution criteria and restrictions.\n"
-        "- Use direct evidence from the candidate response text.\n"
-        "- If evidence is missing or ambiguous, mark criterion unmet.\n\n"
-        "Scoring rules:\n"
-        "- Start score at 10.\n"
-        "- Deduct 3 points for each major failure.\n"
-        "- Deduct 1 point for each minor failure.\n"
-        "- Do not auto-fail purely for truncation if core criteria can still be verified from available text.\n"
-        "- Final score must be an integer in range 0-10.\n\n"
-        "Important interpretation rules:\n"
-        "- Strict meal count only when criterion explicitly says exactly N meals or gives a fixed range (for example 3-4).\n"
-        "- For wording like 'covers all 3 meals', require breakfast+lunch+dinner to be present; extra snacks are not a violation unless explicitly restricted.\n"
-        "- Restriction checks must be literal and context-aware (for example plant-based milks are not dairy violations).\n"
-        "- Report missing totals/macros only when a criterion requires them or when verification is impossible.\n\n"
-        "Output format (STRICT):\n"
-        "- Return JSON only. No markdown, no prose outside JSON.\n"
+        "You are auditing an existing evaluation, not generating a new meal plan.\n\n"
+        "Task:\n"
+        "1) Verify whether the EXISTING score and EXISTING reasoning are correct against the provided criteria and restrictions.\n"
+        "2) Identify what is wrong, missing, or overstated in existing reasoning.\n"
+        "3) Provide an updated score and corrected concise reasoning.\n\n"
+        "Instructions:\n"
+        "- Use only the test case and candidate response as evidence.\n"
+        "- Be concise and factual.\n"
+        "- If existing reasoning is fully valid, say so and keep score close.\n"
+        "- Return integer score in range 0-10.\n\n"
+        "Return STRICT JSON only:\n"
         f"{json.dumps(schema_hint, ensure_ascii=False)}\n\n"
-        "Issue type guidance examples:\n"
-        "1) wrong_meal_count:\n"
-        "criterion='exactly 4 meals', response has 6 eating occasions.\n"
-        "2) missing_sections:\n"
-        "criterion requires all 3 meals, response lacks dinner heading.\n"
-        "3) unmet_restriction:\n"
-        "restriction='vegetarian', response includes chicken breast.\n"
-        "4) incomplete_totals:\n"
-        "criterion requires carb percentage, but daily carbs/calories are missing.\n"
-        "5) truncated_output:\n"
-        "response ends abruptly; flag it, but do not treat as automatic major failure if core criteria remain verifiable.\n\n"
         "TEST_CASE:\n"
         f"{json.dumps(case, ensure_ascii=False)}\n\n"
-        "DETERMINISTIC_PRECHECK_ISSUES:\n"
-        f"{json.dumps(deterministic_issues, ensure_ascii=False)}\n\n"
+        "EXISTING_EVALUATION:\n"
+        f"{json.dumps({'score': existing_score, 'reasoning': existing_reasoning}, ensure_ascii=False)}\n\n"
         "CANDIDATE_RESPONSE:\n"
         f"{response_text}\n"
     )
@@ -546,9 +213,10 @@ def bedrock_judge(
     model_id: str,
     case: Dict[str, Any],
     response_text: str,
-    deterministic_issues: List[Dict[str, str]],
-) -> Tuple[Optional[int], str, List[Dict[str, Any]], List[str], Optional[str]]:
-    prompt = build_evaluator_prompt(case, response_text, deterministic_issues)
+    existing_score: Optional[float],
+    existing_reasoning: Optional[str],
+) -> Tuple[Optional[int], str, List[str], str, Optional[str]]:
+    prompt = build_evaluator_prompt(case, response_text, existing_score, existing_reasoning)
 
     try:
         response = client.converse(
@@ -562,7 +230,7 @@ def bedrock_judge(
             inferenceConfig={"temperature": 0.0, "maxTokens": 1200},
         )
     except (ClientError, BotoCoreError) as exc:
-        return None, "LLM evaluation unavailable due to AWS error.", [], [], str(exc)
+        return None, "LLM evaluation unavailable due to AWS error.", [], "", str(exc)
 
     contents = response.get("output", {}).get("message", {}).get("content", [])
     text_parts = [part.get("text", "") for part in contents if isinstance(part, dict)]
@@ -570,9 +238,9 @@ def bedrock_judge(
 
     parsed = extract_json_object(model_text)
     if not parsed:
-        return None, "LLM response was not valid JSON.", [], [], None
+        return None, "LLM response was not valid JSON.", [], "", None
 
-    score = parsed.get("score_0_to_10")
+    score = parsed.get("updated_score_0_to_10")
     score_int: Optional[int]
     if isinstance(score, (int, float)):
         score_int = int(round(float(score)))
@@ -580,36 +248,13 @@ def bedrock_judge(
     else:
         score_int = None
 
-    reasoning = str(parsed.get("reasoning", "")).strip() or "No reasoning provided by evaluator."
-    criteria_results = parsed.get("criteria_results", [])
-    if not isinstance(criteria_results, list):
-        criteria_results = []
-    critical_failures = parsed.get("critical_failures", [])
-    if not isinstance(critical_failures, list):
-        critical_failures = []
+    reasoning_gaps = str(parsed.get("reasoning_gaps", "")).strip() or "No reasoning gaps reported."
+    missed_points = parsed.get("missed_points", [])
+    if not isinstance(missed_points, list):
+        missed_points = []
+    corrected_reasoning = str(parsed.get("corrected_reasoning", "")).strip() or reasoning_gaps
 
-    return score_int, reasoning, criteria_results, [str(x) for x in critical_failures], None
-
-
-def severity_penalty(severity: str) -> int:
-    if severity == "major":
-        return 2
-    if severity == "minor":
-        return 1
-    if severity == "info":
-        return 0
-    return 0
-
-
-def compute_total_penalty(issues: List[Dict[str, str]]) -> int:
-    return sum(severity_penalty(issue.get("severity", "minor")) for issue in issues)
-
-
-def combine_scores(llm_score: Optional[int], deterministic_issues: List[Dict[str, str]]) -> int:
-    baseline = llm_score if llm_score is not None else 8
-    penalty = compute_total_penalty(deterministic_issues)
-    final = baseline - penalty
-    return max(0, min(10, final))
+    return score_int, reasoning_gaps, [str(x) for x in missed_points], corrected_reasoning, None
 
 
 def extract_source_metadata(source_entry: Optional[Dict[str, Any]]) -> Tuple[Optional[float], Optional[str]]:
@@ -628,16 +273,6 @@ def extract_source_metadata(source_entry: Optional[Dict[str, Any]]) -> Tuple[Opt
         source_reasoning = raw_source_reasoning.strip()
 
     return source_score, source_reasoning
-
-
-def short_reasoning(llm_reasoning: str, deterministic_issues: List[Dict[str, str]]) -> str:
-    if not deterministic_issues:
-        return llm_reasoning or "All required criteria appear satisfied."
-
-    top_issues = "; ".join(issue.get("detail", "") for issue in deterministic_issues[:3])
-    if llm_reasoning:
-        return f"{llm_reasoning} Key detected issues: {top_issues}"
-    return f"Detected issues: {top_issues}"
 
 
 def score_class(score: int) -> str:
@@ -659,31 +294,19 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
         )
         criteria_html = "<br>".join(f"- {escape(str(c))}" for c in item["test_case"].get("solution_criteria", []))
 
-        issues_html = "<br>".join(
-            f"[{escape(issue.get('severity', 'minor'))}] {escape(issue.get('detail', ''))}"
-            for issue in item.get("issues_detected", [])
-        )
-        if not issues_html:
-            issues_html = "None"
-
-        critical_failures_html = "<br>".join(escape(str(x)) for x in item.get("llm_critical_failures", []))
-        if not critical_failures_html:
-            critical_failures_html = "None"
-
-        llm_error_text = item.get("llm_error")
-        llm_error_html = escape(str(llm_error_text)) if llm_error_text else "None"
-
         source_score = item.get("source_score")
         source_score_text = "-" if source_score is None else str(source_score)
-
         source_reasoning = item.get("source_reasoning")
         source_reasoning_text = "-" if not source_reasoning else escape(str(source_reasoning))
 
-        score_delta = item.get("score_delta_vs_source")
-        score_delta_text = "-" if score_delta is None else str(score_delta)
+        reasoning_gaps = item.get("reasoning_gaps") or "None"
+        missed_points = item.get("reasoning_missed_points") or "None"
+        reasoning_audit_html = f"{escape(str(reasoning_gaps))}<br><strong>Missed:</strong> {escape(str(missed_points))}"
 
-        deterministic_penalty = item.get("deterministic_penalty")
-        deterministic_penalty_text = "-" if deterministic_penalty is None else str(deterministic_penalty)
+        suggested_update = escape(str(item.get("suggested_update") or "None"))
+        llm_error_text = item.get("llm_error")
+        if llm_error_text:
+            suggested_update = f"{suggested_update}<br><strong>LLM error:</strong> {escape(str(llm_error_text))}"
 
         rows.append(
             "\n".join(
@@ -694,16 +317,12 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
                     f"<td>{prompt_inputs_html}</td>",
                     f"<td>{criteria_html}</td>",
                     f"<td><pre>{escape(str(item.get('output', '')))}</pre></td>",
+                    f"<td>{source_score_text}</td>",
+                    f"<td>{source_reasoning_text}</td>",
                     f"<td><span class=\"score score-{score_class(int(item['score']))}\">{item['score']}</span></td>",
                     f"<td>{escape(str(item.get('reasoning', '')))}</td>",
-                    f"<td>{issues_html}</td>",
-                    f"<td>{escape(str(item.get('llm_raw_score', '-')))}</td>",
-                    f"<td>{critical_failures_html}</td>",
-                    f"<td>{llm_error_html}</td>",
-                    f"<td>{source_score_text}</td>",
-                    f"<td>{score_delta_text}</td>",
-                    f"<td>{deterministic_penalty_text}</td>",
-                    f"<td>{source_reasoning_text}</td>",
+                    f"<td>{reasoning_audit_html}</td>",
+                    f"<td>{suggested_update}</td>",
                     "</tr>",
                 ]
             )
@@ -820,16 +439,12 @@ def render_html_report(results_doc: Dict[str, Any]) -> str:
             <th>Prompt Inputs</th>
             <th>Criteria</th>
             <th>Response</th>
-            <th>Score</th>
-            <th>Reasoning</th>
-            <th>Issues</th>
-                        <th>LLM Raw Score</th>
-                        <th>LLM Critical Failures</th>
-                        <th>LLM Error</th>
-                        <th>Source Score</th>
-                        <th>Score Delta (Final-Source)</th>
-                        <th>Deterministic Penalty</th>
-                        <th>Source Reasoning</th>
+                        <th>Existing Score</th>
+                        <th>Existing Reasoning</th>
+                        <th>Updated Score</th>
+                        <th>Updated Reasoning</th>
+                        <th>Reasoning Audit</th>
+                        <th>Suggested Update</th>
           </tr>
         </thead>
         <tbody>
@@ -940,19 +555,30 @@ def resolve_output_items(responses: Any) -> List[Dict[str, Any]]:
     return output_items
 
 
+def load_output_items(path: Path) -> List[Dict[str, Any]]:
+    suffix = path.suffix.lower()
+    if suffix == ".html":
+        return parse_output_html_responses(path)
+
+    responses = load_json(path)
+    return resolve_output_items(responses)
+
+
 def resolve_source_entry(
     output_index: Dict[str, Dict[str, Any]],
     output_items: List[Dict[str, Any]],
+    case: Dict[str, Any],
     case_key: str,
-    case_position: int,
 ) -> Optional[Dict[str, Any]]:
     source_entry = output_index.get(case_key)
     if source_entry:
         return source_entry
 
-    if case_position < len(output_items):
-        # Fallback by position if output file does not embed a full test case object.
-        return output_items[case_position]
+    relaxed_key = normalize_case_key_relaxed(case)
+    for item in output_items:
+        test_case = item.get("test_case")
+        if isinstance(test_case, dict) and normalize_case_key_relaxed(test_case) == relaxed_key:
+            return item
 
     return None
 
@@ -982,34 +608,35 @@ def evaluate_single_case(
 ) -> Dict[str, Any]:
     response_text = select_output_text(source_entry or {}) if source_entry else ""
     source_score, source_reasoning = extract_source_metadata(source_entry)
-    deterministic_issues = criteria_rule_checks(case, response_text)
 
     if skip_llm:
-        llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = (
+        llm_score, reasoning_gaps, missed_points, corrected_reasoning, llm_error = (
             None,
             "LLM evaluation skipped by CLI option.",
             [],
-            [],
+            source_reasoning or "No existing reasoning.",
             None,
         )
     else:
-        llm_score, llm_reasoning, criteria_results, critical_failures, llm_error = bedrock_judge(
+        llm_score, reasoning_gaps, missed_points, corrected_reasoning, llm_error = bedrock_judge(
             client=bedrock_client,
             model_id=model_id,
             case=case,
             response_text=response_text,
-            deterministic_issues=deterministic_issues,
+            existing_score=source_score,
+            existing_reasoning=source_reasoning,
         )
 
-    llm_critical_failure_notes = [f"LLM critical failure: {failure}" for failure in critical_failures]
-    deterministic_penalty = compute_total_penalty(deterministic_issues)
-    final_score = combine_scores(llm_score, deterministic_issues)
-    reasoning = short_reasoning(llm_reasoning, deterministic_issues)
+    final_score = llm_score if llm_score is not None else int(source_score or 0)
+    reasoning = corrected_reasoning
     passed = final_score >= pass_threshold
 
     score_delta_vs_source = None
     if source_score is not None:
         score_delta_vs_source = round(float(final_score) - float(source_score), 2)
+
+    missed_text = " | ".join(missed_points) if missed_points else "None"
+    suggested_update = f"Updated score: {final_score} | {corrected_reasoning}"
 
     return {
         "case_id": f"TC-{case_index:03d}",
@@ -1018,15 +645,14 @@ def evaluate_single_case(
         "score": final_score,
         "reasoning": reasoning,
         "passed": passed,
-        "issues_detected": deterministic_issues,
-        "criteria_results": criteria_results,
-        "llm_critical_failures": llm_critical_failure_notes,
         "llm_raw_score": llm_score,
         "llm_error": llm_error,
         "source_score": source_score,
         "source_reasoning": source_reasoning,
         "score_delta_vs_source": score_delta_vs_source,
-        "deterministic_penalty": deterministic_penalty,
+        "reasoning_gaps": reasoning_gaps,
+        "reasoning_missed_points": missed_text,
+        "suggested_update": suggested_update,
     }
 
 
@@ -1054,18 +680,27 @@ def evaluate_cases(
     skip_llm: bool,
 ) -> Dict[str, Any]:
     output_index = build_response_index(output_items)
-    evaluated_results = [
-        evaluate_single_case(
-            case_index=i,
-            case=case,
-            source_entry=resolve_source_entry(output_index, output_items, normalize_case_key(case), i - 1),
-            bedrock_client=bedrock_client,
-            model_id=model_id,
-            pass_threshold=pass_threshold,
-            skip_llm=skip_llm,
+    evaluated_results: List[Dict[str, Any]] = []
+    for i, case in enumerate(dataset, start=1):
+        source_entry = resolve_source_entry(output_index, output_items, case, normalize_case_key(case))
+        if source_entry is None:
+            scenario = str(case.get("scenario", "<unknown scenario>"))
+            raise ValueError(
+                "Could not find matching source evaluation for dataset case: "
+                f"{scenario}. Ensure --responses file corresponds to the same dataset."
+            )
+
+        evaluated_results.append(
+            evaluate_single_case(
+                case_index=i,
+                case=case,
+                source_entry=source_entry,
+                bedrock_client=bedrock_client,
+                model_id=model_id,
+                pass_threshold=pass_threshold,
+                skip_llm=skip_llm,
+            )
         )
-        for i, case in enumerate(dataset, start=1)
-    ]
 
     summary = build_summary(evaluated_results, pass_threshold)
 
@@ -1080,12 +715,20 @@ def evaluate_cases(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Prompt evaluation pipeline using AWS Bedrock.")
     parser.add_argument("--dataset", default="dataset/dataset.json", help="Path to dataset JSON.")
-    parser.add_argument("--responses", default="dataset/output.json", help="Path to existing responses JSON.")
+    parser.add_argument(
+        "--responses",
+        default="dataset/output.html",
+        help="Path to existing evaluations source (.json or .html).",
+    )
     parser.add_argument("--output-json", default="results/output_llm.json", help="Path to write evaluated JSON report.")
     parser.add_argument("--output-html", default="results/output_llm.html", help="Path to write HTML report.")
     parser.add_argument("--pass-threshold", type=float, default=None, help="Pass threshold score in range 0-10.")
     parser.add_argument("--model-id", default=None, help="AWS Bedrock model ID.")
-    parser.add_argument("--skip-llm", action="store_true", help="Run deterministic checks only and skip Bedrock calls.")
+    parser.add_argument(
+        "--skip-llm",
+        action="store_true",
+        help="Skip Bedrock auditing and keep existing score/reasoning from source.",
+    )
     parser.add_argument("--aws-region", default=None, help="AWS region override (falls back to AWS_DEFAULT_REGION).")
     parser.add_argument("--preflight-only", action="store_true", help="Run AWS auth preflight and exit.")
     return parser.parse_args()
@@ -1109,7 +752,7 @@ def main() -> None:
     if not (0 <= pass_threshold <= 10):
         raise ValueError("Pass threshold must be in range 0-10.")
 
-    model_id = "deterministic-only"
+    model_id = "llm-skipped"
     if not args.skip_llm:
         model_id = resolve_model_id(args.model_id)
 
@@ -1117,8 +760,7 @@ def main() -> None:
     if not isinstance(dataset, list):
         raise ValueError("Dataset JSON must be a list of test cases.")
 
-    responses = load_json(responses_path)
-    output_items = resolve_output_items(responses)
+    output_items = load_output_items(responses_path)
 
     region_name = args.aws_region or os.getenv("AWS_DEFAULT_REGION")
 
